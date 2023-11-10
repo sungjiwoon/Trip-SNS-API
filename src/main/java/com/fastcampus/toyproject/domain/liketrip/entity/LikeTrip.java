@@ -1,5 +1,4 @@
-package com.fastcampus.toyproject.domain.reply;
-
+package com.fastcampus.toyproject.domain.liketrip.entity;
 
 import com.fastcampus.toyproject.common.BaseTimeEntity;
 import com.fastcampus.toyproject.domain.user.entity.User;
@@ -12,7 +11,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 @Entity
-public class Reply {
+public class LikeTrip {
 
     @Id
     private Long id;
@@ -23,9 +22,8 @@ public class Reply {
     @OneToOne
     private Trip trip;
 
-    private String content;
+    private Boolean isLike;
 
     @Embedded
     private BaseTimeEntity baseTimeEntity;
-
 }

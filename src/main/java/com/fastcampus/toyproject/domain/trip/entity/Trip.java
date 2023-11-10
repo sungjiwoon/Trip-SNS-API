@@ -3,7 +3,7 @@ package com.fastcampus.toyproject.domain.trip.entity;
 import com.fastcampus.toyproject.common.BaseTimeEntity;
 import com.fastcampus.toyproject.domain.itinerary.entity.Itinerary;
 import com.fastcampus.toyproject.domain.user.entity.User;
-import com.fastcampus.toyproject.domain.reply.Reply;
+import com.fastcampus.toyproject.domain.reply.entity.Reply;
 import com.fastcampus.toyproject.domain.trip.dto.TripRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
@@ -66,7 +66,7 @@ public class Trip extends BaseTimeEntity {
 
     private Integer likesCount;
 
-    @OneToMany
+    @OneToMany(mappedBy = "reply", fetch = FetchType.LAZY)
     private List<Reply> replyList;
 
     @ColumnDefault("false")

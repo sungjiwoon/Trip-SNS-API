@@ -1,13 +1,14 @@
 package com.fastcampus.toyproject.domain.user.entity;
 
 import com.fastcampus.toyproject.common.BaseTimeEntity;
-import com.fastcampus.toyproject.domain.liketrip.LikeTrip;
-import com.fastcampus.toyproject.domain.reply.Reply;
+import com.fastcampus.toyproject.domain.liketrip.entity.LikeTrip;
+import com.fastcampus.toyproject.domain.reply.entity.Reply;
 import com.fastcampus.toyproject.domain.trip.entity.Trip;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -36,13 +37,13 @@ public class User {
 
     private String authority;
 
-    @OneToMany
+    @OneToMany(mappedBy = "trip", fetch = FetchType.LAZY)
     private List<Trip> tripList;
 
-    @OneToMany
+    @OneToMany(mappedBy = "likeTrip", fetch = FetchType.LAZY)
     private List<LikeTrip> likeTripList;
 
-    @OneToMany
+    @OneToMany(mappedBy = "reply", fetch = FetchType.LAZY)
     private List<Reply> replyList;
 
     @Embedded
