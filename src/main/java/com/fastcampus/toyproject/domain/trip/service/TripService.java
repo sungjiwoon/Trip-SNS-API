@@ -7,8 +7,8 @@ import com.fastcampus.toyproject.common.exception.DefaultException;
 import com.fastcampus.toyproject.common.exception.ExceptionCode;
 import com.fastcampus.toyproject.domain.itinerary.entity.Itinerary;
 import com.fastcampus.toyproject.domain.itinerary.service.ItineraryService;
-import com.fastcampus.toyproject.domain.member.entity.Member;
-import com.fastcampus.toyproject.domain.member.repository.MemberRepository;
+import com.fastcampus.toyproject.domain.user.entity.User;
+import com.fastcampus.toyproject.domain.user.repository.UserRepository;
 import com.fastcampus.toyproject.domain.trip.dto.TripDetailResponse;
 import com.fastcampus.toyproject.domain.trip.dto.TripRequest;
 import com.fastcampus.toyproject.domain.trip.dto.TripResponse;
@@ -16,7 +16,6 @@ import com.fastcampus.toyproject.domain.trip.entity.Trip;
 import com.fastcampus.toyproject.domain.trip.exception.TripException;
 import com.fastcampus.toyproject.domain.trip.repository.TripRepository;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,11 +26,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class TripService {
 
     private final TripRepository tripRepository;
-    private final MemberRepository memberRepository;
+    private final UserRepository userRepository;
     private final ItineraryService itineraryService;
 
-    private Member getValidatedMember(Long memberId) {
-        return memberRepository.findById(memberId)
+    private User getValidatedMember(Long memberId) {
+        return userRepository.findById(memberId)
             .orElseThrow(
                 () -> new DefaultException(ExceptionCode.INVALID_REQUEST, "해당하는 멤버가 없습니다."));
     }
@@ -107,7 +106,7 @@ public class TripService {
     public TripResponse insertTrip(Long memberId, TripRequest tripRequest) {
 
         Trip trip = Trip.builder()
-            .member(getValidatedMember(memberId))
+            .user(getValidatedMember(memberId))
             .tripName(tripRequest.getTripName())
             .startDate(tripRequest.getStartDate())
             .endDate(tripRequest.getEndDate())
@@ -129,7 +128,7 @@ public class TripService {
     public TripResponse updateTrip(Long memberId, Long tripId, TripRequest tripRequest) {
         Trip existTrip = getTripByTripId(tripId);
 
-        if (!existTrip.getMember().getMemberId().equals(memberId)) {
+        if (!existTrip.getUser().getUserId().equals(memberId)) {
             throw new DefaultException(ExceptionCode.INVALID_REQUEST, "멤버의 여행 정보가 일치하지 않습니다.");
         }
 

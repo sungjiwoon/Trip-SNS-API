@@ -62,7 +62,7 @@
 
 - 사용자 추가
 ```
- POST /member
+ POST /user
 ```
 ```
 { nickname : '회원명' }
@@ -75,7 +75,7 @@
 
 - 전체 여행 조회
 ```
-GET /api/member/1/trip/all
+GET /api/user/1/trip/all
 ```
 ```
 파라미터 없음
@@ -84,7 +84,7 @@ GET /api/member/1/trip/all
 
 - 단일 여행 상세 조회
 ```
-GET /api/member/1/trip/{tripId}
+GET /api/user/1/trip/{tripId}
 ```
 ```
 파라미터 없음
@@ -93,7 +93,7 @@ GET /api/member/1/trip/{tripId}
 
 - 여행 입력
 ``` 
-POST /api/member/1/trip
+POST /api/user/1/trip
 ```    
 ``` 
 {  
@@ -106,7 +106,7 @@ POST /api/member/1/trip
 ---
 - 여행 수정
 ```
-PUT /api/member/1/trip/{tripId}
+PUT /api/user/1/trip/{tripId}
 ```
 ```
 {
@@ -120,7 +120,7 @@ PUT /api/member/1/trip/{tripId}
 
 - 여행 삭제
 ```
-DELETE /api/member/1/trip/{tripId}
+DELETE /api/user/1/trip/{tripId}
 ```
 ```
 파라미터 없음
@@ -131,7 +131,7 @@ DELETE /api/member/1/trip/{tripId}
 
 - 여정 입력
 ```
-POST api/member/1/trip-itineraries/{tripId}
+POST api/user/1/trip-itineraries/{tripId}
 ```
 ```
 [
@@ -151,7 +151,7 @@ POST api/member/1/trip-itineraries/{tripId}
 
 - 여정 수정
 ```
-PUT /api/member/1/trip-itineraries/{tripId}
+PUT /api/user/1/trip-itineraries/{tripId}
 ```
 ```
 [
@@ -172,7 +172,7 @@ PUT /api/member/1/trip-itineraries/{tripId}
 
 - 여정 삭제
 ```
-POST /api/member/1/trip-itineraries/delete/{tripId}
+POST /api/user/1/trip-itineraries/delete/{tripId}
 ```
 ```
 [ 3, 4 ... ]
@@ -201,7 +201,7 @@ POST /api/member/1/trip-itineraries/delete/{tripId}
    │  │  │  │  └─ 📜ItineraryFactory.java: 상속 관계의 자식 클래스 종류에 따른 Entity 생성 
    │  │  │  ├─ 📂type: 자식 클래스의 타입을 Enum으로 처리
    │  │  │  └─ 📂util: 여정 관련 공통 메소드
-   │  │  ├─ 📂member: 여행과 여정을 가지는 멤버 컨텍스트 정의
+   │  │  ├─ 📂user: 여행과 여정을 가지는 멤버 컨텍스트 정의
    │  │      └─ 📂dto: 여정과 마찬가지로 Request와 Response에 따라 DTO 정리
    │  │  └─ 📂trip
    │  │      └─ 📂dto: 여정과 마찬가지로 Request와 Response에 따라 DTO 정리
