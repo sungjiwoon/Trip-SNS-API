@@ -32,6 +32,18 @@ public class Movement extends Itinerary {
     @Column(nullable = false)
     private String transportation;
 
+    private String departurePlaceInfo;
+
+    private Double departureLat;
+
+    private Double departureLng;
+
+    private String arrivalPlaceInfo;
+
+    private Double arrivalLat;
+
+    private Double arrivalLng;
+
     public void updateMovement(ItineraryUpdateRequest req) {
         super.updateItineraryName(req.getMovementName());
         super.updateItineraryOrder(req.getOrder());
