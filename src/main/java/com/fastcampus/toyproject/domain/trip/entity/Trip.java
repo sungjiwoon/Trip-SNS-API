@@ -40,7 +40,12 @@ public class Trip extends BaseTimeEntity {
         cascade = {CascadeType.ALL},
         fetch = FetchType.EAGER,
         orphanRemoval = true)
-    List<Itinerary> itineraryList = new ArrayList<>();
+    private List<Itinerary> itineraryList = new ArrayList<>();
+
+
+    @OneToMany(mappedBy = "trip", fetch = FetchType.LAZY)
+    private List<Reply> replyList;
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,9 +70,6 @@ public class Trip extends BaseTimeEntity {
     private Boolean isDomestic;
 
     private Integer likesCount;
-
-    @OneToMany(mappedBy = "reply", fetch = FetchType.LAZY)
-    private List<Reply> replyList;
 
     @ColumnDefault("false")
     private Boolean isDeleted;

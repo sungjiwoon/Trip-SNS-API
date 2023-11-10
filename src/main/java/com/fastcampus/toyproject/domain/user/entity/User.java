@@ -37,13 +37,13 @@ public class User {
 
     private String authority;
 
-    @OneToMany(mappedBy = "trip", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Trip> tripList;
 
-    @OneToMany(mappedBy = "likeTrip", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<LikeTrip> likeTripList;
 
-    @OneToMany(mappedBy = "reply", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Reply> replyList;
 
     @Embedded
