@@ -22,6 +22,12 @@ public class Lodgement extends Itinerary {
     @Column(nullable = false)
     private LocalDateTime checkOut;
 
+    private String placeInfo;
+
+    private Double lat;
+
+    private Double lng;
+
     public void updateLodgement(ItineraryUpdateRequest req) {
         super.updateItineraryName(req.getItem());
         super.updateItineraryOrder(req.getOrder());

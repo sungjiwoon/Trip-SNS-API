@@ -2,7 +2,8 @@ package com.fastcampus.toyproject.domain.trip.entity;
 
 import com.fastcampus.toyproject.common.BaseTimeEntity;
 import com.fastcampus.toyproject.domain.itinerary.entity.Itinerary;
-import com.fastcampus.toyproject.domain.member.entity.Member;
+import com.fastcampus.toyproject.domain.user.entity.User;
+import com.fastcampus.toyproject.domain.reply.entity.Reply;
 import com.fastcampus.toyproject.domain.trip.dto.TripRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
@@ -39,24 +40,37 @@ public class Trip extends BaseTimeEntity {
         cascade = {CascadeType.ALL},
         fetch = FetchType.EAGER,
         orphanRemoval = true)
-    List<Itinerary> itineraryList = new ArrayList<>();
+    private List<Itinerary> itineraryList = new ArrayList<>();
+
+
+    @OneToMany(mappedBy = "trip", fetch = FetchType.LAZY)
+    private List<Reply> replyList;
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
     private Long tripId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "memberId")
     @JsonIgnore
-    private Member member;
+    private User user;
+
     @Column(nullable = false)
     private String tripName;
+
     @Column(nullable = false)
     private LocalDate startDate;
+
     @Column(nullable = false)
     private LocalDate endDate;
+
     @ColumnDefault("true")
     private Boolean isDomestic;
+
+    private Integer likesCount;
+
     @ColumnDefault("false")
     private Boolean isDeleted;
     //CascadeType.ALL -> 상위 객체 작업 하위객체 모두한테 전파.

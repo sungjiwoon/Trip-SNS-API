@@ -2,6 +2,7 @@ package com.fastcampus.toyproject.common;
 
 import java.time.LocalDateTime;
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @NoArgsConstructor
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
+@Embeddable
 public class BaseTimeEntity {
 
     @CreatedDate

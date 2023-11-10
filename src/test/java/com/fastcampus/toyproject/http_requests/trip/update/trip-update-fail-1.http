@@ -1,5 +1,5 @@
 ### 해당 TripID의 여행 정보가 없을 때
-PUT http://localhost:8080/api/member/1/trip/9999
+PUT http://localhost:8080/api/user/1/trip/9999
 Content-Type: application/json
 
 {

@@ -1,5 +1,5 @@
 ### 출발 시간이 도착 시간 보다 더 늦을 때
-PUT http://localhost:8080/api/member/1/trip-itineraries/1
+PUT http://localhost:8080/api/user/1/trip-itineraries/1
 Content-Type: application/json
 
 {
