@@ -7,6 +7,7 @@ import com.fastcampus.toyproject.domain.trip.entity.Trip;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -16,7 +17,7 @@ public class Reply {
     @Id
     private Long id;
 
-    @OneToMany
+    @ManyToOne
     private User user;
 
     @OneToOne
