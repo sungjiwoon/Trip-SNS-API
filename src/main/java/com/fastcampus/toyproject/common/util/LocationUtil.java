@@ -34,7 +34,8 @@ public class LocationUtil {
 
     private URL createResultUrl(String location) {
         try {
-            return new URL(baseUrl + URLEncoder.encode(location, StandardCharsets.UTF_8) + "&key=" + key);
+            return new URL(
+                baseUrl + URLEncoder.encode(location, StandardCharsets.UTF_8) + "&key=" + key);
         } catch (IOException e) {
             throw new DefaultException(ExceptionCode.BAD_REQUEST);
         }
