@@ -27,7 +27,6 @@ public class TripResponse {
     private LocalDate startDate;
     private LocalDate endDate;
     private Boolean isDomestic;
-    private String itineraryNameList;
     private String tripPeriod;
 
     public static TripResponse fromEntity(Trip trip) {
@@ -38,12 +37,6 @@ public class TripResponse {
             .startDate(trip.getStartDate())
             .endDate(trip.getEndDate())
             .isDomestic(trip.getIsDomestic())
-            .itineraryNameList(
-                Optional.ofNullable(trip.getItineraryList())
-                    .orElse(new ArrayList<>())
-                    .stream()
-                    .map(Itinerary::getItineraryName)
-                    .collect(Collectors.joining(", ")))
             .tripPeriod(DateUtil.getDaysBetweenDate(trip.getStartDate(), trip.getEndDate()))
             .build();
     }

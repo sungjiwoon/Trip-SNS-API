@@ -15,6 +15,7 @@ import com.fastcampus.toyproject.domain.trip.exception.TripException;
 import com.fastcampus.toyproject.domain.trip.repository.TripRepository;
 import com.fastcampus.toyproject.domain.user.entity.User;
 import com.fastcampus.toyproject.domain.user.repository.UserRepository;
+import com.fastcampus.toyproject.domain.user.service.UserService;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -28,12 +29,8 @@ public class TripService {
     private final TripRepository tripRepository;
     private final UserRepository userRepository;
     private final ItineraryService itineraryService;
+    private final UserService userService;
 
-    private User getValidatedMember(Long memberId) {
-        return userRepository.findById(memberId)
-            .orElseThrow(
-                () -> new DefaultException(ExceptionCode.INVALID_REQUEST, "해당하는 멤버가 없습니다."));
-    }
 
     /**
      * trip 아이디를 통한 trip 객체 반환하는 메소드
@@ -80,7 +77,10 @@ public class TripService {
     @Transactional(readOnly = true)
     public List<TripResponse> getAllTrips() {
         return tripRepository.findAll()
-            .stream().filter(trip -> trip.getBaseTimeEntity().getDeletedAt() == null)
+            .stream().filter(trip -> {
+                    System.out.println("하이");
+                return trip.getBaseTimeEntity().getDeletedAt() == null;
+            })
             .map(TripResponse::fromEntity).
             collect(Collectors.toList());
     }
@@ -99,21 +99,28 @@ public class TripService {
     /**
      * trip 1개 삽입하는 메소드
      *
-     * @param memberId
+     * @param userId
      * @param tripRequest
      * @return tripResponseDTO
      */
-    public TripResponse insertTrip(Long memberId, TripRequest tripRequest) {
+    @Transactional
+    public TripResponse insertTrip(Long userId, TripRequest tripRequest) {
 
         Trip trip = Trip.builder()
-            .user(getValidatedMember(memberId))
+            .user(userService.getUser(userId))
             .tripName(tripRequest.getTripName())
             .startDate(tripRequest.getStartDate())
             .endDate(tripRequest.getEndDate())
             .isDomestic(tripRequest.getIsDomestic())
             .build();
 
-        return TripResponse.fromEntity(tripRepository.save(trip));
+        Trip saveTrip = tripRepository.save(trip);
+        if (saveTrip != null) {
+            //System.out.println("hi:" + trip.getBaseTimeEntity().getCreatedAt());
+            TripResponse.fromEntity(trip);
+        }
+
+        return null;
     }
 
     /**

@@ -31,7 +31,7 @@ import org.hibernate.annotations.Comment;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
-@EntityListeners(AuditingEntityListener.class)
+//@EntityListeners(AuditingEntityListener.class)
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -77,6 +77,7 @@ public class Trip {
     @Comment("국내여행 여부")
     private Boolean isDomestic;
 
+//    @ColumnDefault("0") // 검색
     @Comment("좋아요 개수")
     private Integer likesCount;
 

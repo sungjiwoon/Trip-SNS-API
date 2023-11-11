@@ -19,8 +19,8 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseDTO<UserResponseDTO> insert(@RequestBody UserRequestDTO memberRequestDTO) {
-        User savedUser = userService.insertMember(memberRequestDTO);
+    public ResponseDTO<UserResponseDTO> insert(@RequestBody UserRequestDTO userRequestDTO) {
+        User savedUser = userService.insertUser(userRequestDTO);
         UserResponseDTO responseData = new UserResponseDTO(savedUser.getUserId(),
             savedUser.getEmail());
         return ResponseDTO.ok("회원 등록 성공!", responseData);
