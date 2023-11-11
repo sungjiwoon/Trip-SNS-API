@@ -10,11 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
- * 날짜 및 일시를 다루는 공통 유틸 클래스.
- * 기능
- * 1. 날짜 차이 계산 (10day)
- * 2. 시간 차이 계산 (1h 10m)
- * 3. 출발 날짜가 도착 날짜보다 늦지는 않은지.
+ * 날짜 및 일시를 다루는 공통 유틸 클래스. 기능 1. 날짜 차이 계산 (10day) 2. 시간 차이 계산 (1h 10m) 3. 출발 날짜가 도착 날짜보다 늦지는 않은지.
  */
 public class DateUtil {
 

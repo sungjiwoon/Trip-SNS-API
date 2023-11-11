@@ -17,6 +17,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Comment;
 
 @Entity
 @Getter
@@ -27,12 +28,15 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Comment("사용자 고유 번호(ID)")
     private Long userId;
 
     @Column(nullable = false)
+    @Comment("비밀번호")
     private String password;
 
     @Column(nullable = false)
+    @Comment("이메일")
     private String email;
 
     private String authority;

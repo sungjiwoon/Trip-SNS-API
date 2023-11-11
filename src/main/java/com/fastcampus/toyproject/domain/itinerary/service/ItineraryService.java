@@ -42,7 +42,7 @@ public class ItineraryService {
      */
     private static List<Itinerary> getItineraryList(Trip trip) {
         List<Itinerary> itineraryList = trip.getItineraryList()
-            .stream().filter(it -> it.getIsDeleted() == null || !it.getIsDeleted())
+            .stream().filter(it -> it.getBaseTimeEntity().getDeletedAt() == null)
             .collect(Collectors.toList());
 
         if (itineraryList == null) {
@@ -174,7 +174,7 @@ public class ItineraryService {
             if (it.getTrip().getTripId() != tripId) {
                 throw new ItineraryException(NO_ITINERARY);
             }
-            if (it.getIsDeleted() == null || it.getIsDeleted()) {
+            if (it.getBaseTimeEntity().getDeletedAt() == null) {
                 throw new ItineraryException(ITINERARY_ALREADY_DELETED);
             }
         }
