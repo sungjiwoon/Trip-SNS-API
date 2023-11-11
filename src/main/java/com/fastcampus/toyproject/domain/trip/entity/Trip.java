@@ -56,7 +56,7 @@ public class Trip {
     private Long tripId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "memberId")
+    @JoinColumn(name = "userId")
     @JsonIgnore
     @Comment("사용자 FK")
     private User user;
@@ -74,7 +74,7 @@ public class Trip {
     private LocalDate endDate;
 
     @ColumnDefault("true")
-    @Comment("해외 여부")
+    @Comment("국내여행 여부")
     private Boolean isDomestic;
 
     @Comment("좋아요 개수")
