@@ -1,5 +1,6 @@
 package com.fastcampus.toyproject.domain.itinerary.entity;
 
+import com.fastcampus.toyproject.common.BaseTimeEntity;
 import com.fastcampus.toyproject.domain.itinerary.dto.ItineraryRequest;
 import com.fastcampus.toyproject.domain.itinerary.type.ItineraryType;
 import com.fastcampus.toyproject.domain.trip.entity.Trip;
@@ -27,6 +28,7 @@ public class ItineraryFactory {
                 .departurePlace(ir.getDeparturePlace())
                 .arrivalPlace(ir.getArrivalPlace())
                 .transportation(ir.getItem())
+                .baseTimeEntity(new BaseTimeEntity())
                 .build()
         );
 
@@ -38,6 +40,7 @@ public class ItineraryFactory {
                 .itineraryType(ir.getType())
                 .checkIn(ir.getStartDate())
                 .checkOut(ir.getEndDate())
+                .baseTimeEntity(new BaseTimeEntity())
                 .build()
         );
 
@@ -49,6 +52,7 @@ public class ItineraryFactory {
                 .itineraryType(ir.getType())
                 .departureDate(ir.getStartDate())
                 .arrivalDate(ir.getEndDate())
+                .baseTimeEntity(new BaseTimeEntity())
                 .build()
         );
     }
