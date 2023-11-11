@@ -1,20 +1,30 @@
+
+
 spring:
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
   datasource:
-    url: jdbc:h2:mem:testdb
-    username: sa
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/ToyProject?createDatabaseIfNotExist=true&useSSL=true
+    username: root
+    password: root1234!!
+
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
+    database: mysql
+    show-sql: true
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+
   google-api:
     base-url: https://maps.googleapis.com/maps/api/geocode/json?address=
     key: API_KEY
 
 server:
-  error:
-    include-stacktrace: never
+  address: localhost
+  #  error:
+  #    include-stacktrace: never
+  port: 8080
 
 
