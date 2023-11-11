@@ -10,11 +10,23 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserRepository user;
+    private final UserRepository userRepository;
 
-    public User insertMember(UserRequestDTO memberRequestDTO) {
-        User user = User.builder().email(memberRequestDTO.getEmail()).build();
-        return this.user.save(user);
+    public User insertUser(UserRequestDTO userRequestDTO) {
+        User user = User.builder()
+                .email(userRequestDTO.getEmail())
+                .password(userRequestDTO.getPassword())
+                .authority("ROLE_USER")
+                .build();
+        User saveUser = userRepository.save(user);
+        if (saveUser != null) {
+            return saveUser;
+        }
+        return null; //이거 수정 예정!!
+    }
+
+    public User getUser(Long userId) {
+        return userRepository.getReferenceById(userId);
     }
 
 }

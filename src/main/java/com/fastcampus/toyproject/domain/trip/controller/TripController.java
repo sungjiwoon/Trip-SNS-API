@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/member/{memberId}/trip")
+@RequestMapping("/api/user/{userId}/trip")
 public class TripController {
 
     private final TripService tripService;
@@ -48,7 +48,7 @@ public class TripController {
 
     @PostMapping()
     public ResponseDTO<TripResponse> insertTrip(
-        @PathVariable final Long memberId,
+        @PathVariable final Long userId,
         @Valid @RequestBody final TripRequest tripRequest
     ) {
         DateUtil.isStartDateEarlierThanEndDate(
@@ -56,7 +56,7 @@ public class TripController {
             tripRequest.getEndDate()
         );
         return ResponseDTO.ok("여행 삽입 완료",
-            tripService.insertTrip(memberId, tripRequest)
+            tripService.insertTrip(userId, tripRequest)
         );
     }
 

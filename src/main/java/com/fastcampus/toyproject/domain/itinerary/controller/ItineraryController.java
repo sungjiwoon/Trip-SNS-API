@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("api/member/{memberId}/trip-itineraries")
+@RequestMapping("api/user/{userId}/trip-itineraries")
 public class ItineraryController {
 
     private final ItineraryService itineraryService;
