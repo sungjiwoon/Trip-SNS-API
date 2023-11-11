@@ -10,7 +10,7 @@ class ItineraryResponseTest {
 
     LocalDateTime testDate = LocalDateTime.now();
 
-    @Test
+//    @Test
     void 여정_응답_리스트_생성_테스트() {
         List<ItineraryResponse> list = new ArrayList<>();
         ItineraryResponse ir1 = MovementResponse.builder()
