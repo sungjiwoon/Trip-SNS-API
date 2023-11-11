@@ -10,6 +10,7 @@ import com.fastcampus.toyproject.domain.trip.entity.Trip;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
@@ -26,7 +27,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Comment;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
@@ -37,32 +38,39 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn
 @SuperBuilder
-public class Itinerary extends BaseTimeEntity {
+public class Itinerary {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Comment("여정 ID")
     private Long itineraryId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tripId")
+    @Comment("여행 FK")
     private Trip trip;
 
     @Column(nullable = false)
+    @Comment("여정 이름")
     private String itineraryName;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
+    @Comment("여정 타입")
     private ItineraryType itineraryType;
 
     @Column(nullable = false)
+    @Comment("여정 순서")
     private Integer itineraryOrder;
-
-    @ColumnDefault("false")
-    private Boolean isDeleted;
+    @Embedded
+    private BaseTimeEntity baseTimeEntity;
 
     public void delete() {
-        super.delete(LocalDateTime.now());
-        this.isDeleted = true;
+        baseTimeEntity.delete(LocalDateTime.now());
+    }
+
+    public boolean isDeleted() {
+        return baseTimeEntity.getDeletedAt() != null;
     }
 
     public void updateItineraryName(String itineraryName) {

@@ -7,14 +7,14 @@ import com.fastcampus.toyproject.common.exception.DefaultException;
 import com.fastcampus.toyproject.common.exception.ExceptionCode;
 import com.fastcampus.toyproject.domain.itinerary.entity.Itinerary;
 import com.fastcampus.toyproject.domain.itinerary.service.ItineraryService;
-import com.fastcampus.toyproject.domain.user.entity.User;
-import com.fastcampus.toyproject.domain.user.repository.UserRepository;
 import com.fastcampus.toyproject.domain.trip.dto.TripDetailResponse;
 import com.fastcampus.toyproject.domain.trip.dto.TripRequest;
 import com.fastcampus.toyproject.domain.trip.dto.TripResponse;
 import com.fastcampus.toyproject.domain.trip.entity.Trip;
 import com.fastcampus.toyproject.domain.trip.exception.TripException;
 import com.fastcampus.toyproject.domain.trip.repository.TripRepository;
+import com.fastcampus.toyproject.domain.user.entity.User;
+import com.fastcampus.toyproject.domain.user.repository.UserRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -49,8 +49,8 @@ public class TripService {
 
         List<Itinerary> list = trip.getItineraryList();
 
-        for(int i = 0 ; i < list.size() ; i++){
-            if(list.get(i).getIsDeleted()){
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).isDeleted()) {
                 list.remove(i);
                 i--;
             }
@@ -80,7 +80,7 @@ public class TripService {
     @Transactional(readOnly = true)
     public List<TripResponse> getAllTrips() {
         return tripRepository.findAll()
-            .stream().filter(trip -> !trip.getIsDeleted())
+            .stream().filter(trip -> trip.getBaseTimeEntity().getDeletedAt() == null)
             .map(TripResponse::fromEntity).
             collect(Collectors.toList());
     }
@@ -111,7 +111,6 @@ public class TripService {
             .startDate(tripRequest.getStartDate())
             .endDate(tripRequest.getEndDate())
             .isDomestic(tripRequest.getIsDomestic())
-            .isDeleted(false)
             .build();
 
         return TripResponse.fromEntity(tripRepository.save(trip));

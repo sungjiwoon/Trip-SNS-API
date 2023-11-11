@@ -9,9 +9,9 @@ import org.springframework.data.repository.query.Param;
 
 public interface TripRepository extends JpaRepository<Trip, Long> {
 
-    List<Trip> findAllByIsDeletedIsFalseOrderByTripId();
+    List<Trip> findAllByBaseTimeEntity_DeletedAtIsFalseOrderByTripId();
 
-    @Query("SELECT DISTINCT t FROM Trip t LEFT outer join FETCH t.itineraryList i WHERE i.isDeleted != true AND t.tripId = :tripId")
+    @Query("SELECT DISTINCT t FROM Trip t LEFT outer join FETCH t.itineraryList i WHERE i.baseTimeEntity.deletedAt != null AND t.tripId = :tripId")
     Optional<Trip> findByTripIdAndItineraryDeletedIsFalse(@Param("tripId") Long tripId);
 
 }
