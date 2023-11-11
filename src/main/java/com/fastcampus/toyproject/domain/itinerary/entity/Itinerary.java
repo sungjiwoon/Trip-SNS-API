@@ -62,6 +62,7 @@ public class Itinerary {
     @Column(nullable = false)
     @Comment("여정 순서")
     private Integer itineraryOrder;
+
     @Embedded
     private BaseTimeEntity baseTimeEntity;
 

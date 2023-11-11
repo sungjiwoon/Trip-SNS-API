@@ -3,6 +3,7 @@ package com.fastcampus.toyproject.domain.trip.service;
 
 import static com.fastcampus.toyproject.domain.trip.exception.TripExceptionCode.NO_SUCH_TRIP;
 
+import com.fastcampus.toyproject.common.BaseTimeEntity;
 import com.fastcampus.toyproject.common.exception.DefaultException;
 import com.fastcampus.toyproject.common.exception.ExceptionCode;
 import com.fastcampus.toyproject.domain.itinerary.entity.Itinerary;
@@ -112,6 +113,7 @@ public class TripService {
             .startDate(tripRequest.getStartDate())
             .endDate(tripRequest.getEndDate())
             .isDomestic(tripRequest.getIsDomestic())
+            .baseTimeEntity(new BaseTimeEntity())
             .build();
 
         Trip saveTrip = tripRepository.save(trip);

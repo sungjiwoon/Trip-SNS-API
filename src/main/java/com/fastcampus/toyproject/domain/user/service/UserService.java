@@ -1,5 +1,6 @@
 package com.fastcampus.toyproject.domain.user.service;
 
+import com.fastcampus.toyproject.common.BaseTimeEntity;
 import com.fastcampus.toyproject.domain.user.dto.UserRequestDTO;
 import com.fastcampus.toyproject.domain.user.entity.User;
 import com.fastcampus.toyproject.domain.user.repository.UserRepository;
@@ -17,6 +18,7 @@ public class UserService {
                 .email(userRequestDTO.getEmail())
                 .password(userRequestDTO.getPassword())
                 .authority("ROLE_USER")
+                .baseTimeEntity(new BaseTimeEntity())
                 .build();
         User saveUser = userRepository.save(user);
         if (saveUser != null) {
