@@ -25,7 +25,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-//@SpringBootTest
+@SpringBootTest
 public class ItineraryControllerTest {
 
 
@@ -59,7 +59,7 @@ public class ItineraryControllerTest {
     }
 
 
-//    @Test
+    @Test
     public void insertItineraryTest() throws Exception {
 
         given(itineraryService.insertItineraries(
@@ -76,7 +76,7 @@ public class ItineraryControllerTest {
 
     }
 
-//    @Test
+    @Test
     public void updateItineraryTest() throws Exception {
 
         given(itineraryService.updateItineraries(
@@ -92,7 +92,7 @@ public class ItineraryControllerTest {
             .andExpect(status().isOk());
     }
 
-//    @Test
+    @Test
     public void deleteItienraryTest() throws Exception {
 
         List<Long> deleteList = List.of(1L, 2L);
