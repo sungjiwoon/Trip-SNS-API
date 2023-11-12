@@ -1,8 +1,9 @@
 package com.fastcampus.toyproject.common.exception;
 
-import static com.fastcampus.toyproject.common.exception.ExceptionCode.BAD_REQUEST;
+import static com.fastcampus.toyproject.common.exception.DefaultExceptionCode.BAD_REQUEST;
 
 import com.fastcampus.toyproject.common.dto.ErrorResponseDTO;
+import com.fastcampus.toyproject.common.dto.ResponseDTO;
 import com.fastcampus.toyproject.domain.itinerary.exception.ItineraryException;
 import com.fastcampus.toyproject.domain.trip.exception.TripException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
@@ -28,23 +29,22 @@ public class DefaultExceptionHandler {
      * @return
      */
     @ExceptionHandler(
-        value = {TripException.class, ItineraryException.class, DefaultException.class})
+        value = {TripException.class, ItineraryException.class,
+                DefaultException.class, RuntimeException.class})
     public ResponseEntity<ErrorResponseDTO> handleDefaultException(
         DefaultException e,
         HttpServletRequest request
     ) {
-        log.error("error!!!! errorCode : {}, url : {}, message : {}, trace : {}",
-            e.getErrorCode(),
-            e.getErrorMsg(),
-            request.getRequestURI(),
-            e.getStackTrace()
+        log.error("error!!!! status : {} , errorCode : {}, message : {}, url : {}",
+            e.getErrorCode().getStatus(),
+            e.getErrorCode().getCode(),
+            e.getErrorCode().getMsg(),
+            request.getRequestURI()
         );
 
         return new ResponseEntity<>(
-            ErrorResponseDTO.error(
-                e.getErrorCode(),
-                e.getMessage()),
-            HttpStatus.CONFLICT
+                ErrorResponseDTO.error(e.getErrorCode()),
+                e.getErrorCode().getStatus()
         );
     }
 
@@ -69,11 +69,10 @@ public class DefaultExceptionHandler {
             e.getMessage()
         );
 
+        ExceptionCode badError = BAD_REQUEST;
+
         return new ResponseEntity<>(
-            ErrorResponseDTO.error(
-                BAD_REQUEST,
-                BAD_REQUEST.getMsg()
-            ),
+            ErrorResponseDTO.error(badError),
             HttpStatus.BAD_REQUEST
 
         );
@@ -92,8 +91,10 @@ public class DefaultExceptionHandler {
             e.getStackTrace()
         );
 
+        ExceptionCode serverError = DefaultExceptionCode.INTERNAL_SERVER_ERROR;
+
         return new ResponseEntity<>(
-            ErrorResponseDTO.error(),
+            ErrorResponseDTO.error(serverError),
             HttpStatus.INTERNAL_SERVER_ERROR
         );
     }
