@@ -1,7 +1,7 @@
 package com.fastcampus.toyproject.domain.itinerary.dto;
 
-import static com.fastcampus.toyproject.domain.itinerary.exception.ItineraryExceptionCode.ILLEGAL_ARGUMENT_ARRIVALPLACE;
-import static com.fastcampus.toyproject.domain.itinerary.exception.ItineraryExceptionCode.ILLEGAL_ARGUMENT_DEPARTUREPLACE;
+import static com.fastcampus.toyproject.domain.itinerary.exception.ItineraryExceptionCode.EMPTY_ARRIVAL_PLACE;
+import static com.fastcampus.toyproject.domain.itinerary.exception.ItineraryExceptionCode.EMPTY_DEPARTURE_PLACE;
 
 import com.fastcampus.toyproject.domain.itinerary.exception.ItineraryException;
 import com.fastcampus.toyproject.domain.itinerary.type.ItineraryType;
@@ -42,10 +42,10 @@ public class ItineraryRequest {
 
     public String getMovementName() {
         if (this.departurePlace == null) {
-            throw new ItineraryException(ILLEGAL_ARGUMENT_DEPARTUREPLACE);
+            throw new ItineraryException(EMPTY_DEPARTURE_PLACE);
         }
         if (this.arrivalPlace == null) {
-            throw new ItineraryException(ILLEGAL_ARGUMENT_ARRIVALPLACE);
+            throw new ItineraryException(EMPTY_ARRIVAL_PLACE);
         }
         return this.departurePlace + " -> " + this.arrivalPlace;
     }
