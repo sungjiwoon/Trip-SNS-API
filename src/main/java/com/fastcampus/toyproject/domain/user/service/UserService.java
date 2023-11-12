@@ -11,6 +11,7 @@ import com.fastcampus.toyproject.domain.user.dto.UserResponseDTO;
 import com.fastcampus.toyproject.domain.user.entity.Authority;
 import com.fastcampus.toyproject.domain.user.entity.User;
 import com.fastcampus.toyproject.domain.user.exception.ExistEmailExcpetion;
+import com.fastcampus.toyproject.domain.user.exception.UserEmailNotFoundException;
 import com.fastcampus.toyproject.domain.user.repository.RefreshTokenRepository;
 import com.fastcampus.toyproject.domain.user.repository.UserRepository;
 import java.time.LocalDateTime;
@@ -53,6 +54,13 @@ public class UserService {
     }
 
     public TokenDto login(LoginDto loginDto) {
+
+        User user = userRepository.findByEmail(loginDto.getEmail())
+            .orElseThrow(() -> new RuntimeException("사용자가 없습니다."));
+
+//        if(passwordEncoder.matches(loginDto.getPassword(), user.getPassword())){
+//            throw new RuntimeException("비밀번호가 틀립니다.");
+//        }
 
         UsernamePasswordAuthenticationToken authentication =
             loginDto.toAuthentication();

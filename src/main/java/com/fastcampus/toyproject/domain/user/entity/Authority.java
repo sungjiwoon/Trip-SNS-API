@@ -1,6 +1,19 @@
 package com.fastcampus.toyproject.domain.user.entity;
 
-public enum Authority {
+import org.springframework.security.core.GrantedAuthority;
 
-    ROLE_USER;
+public enum Authority implements GrantedAuthority {
+
+    ROLE_USER("USER");
+
+    private String authority;
+
+    Authority(String authority) {
+        this.authority = authority;
+    }
+
+    @Override
+    public String getAuthority() {
+        return this.authority;
+    }
 }

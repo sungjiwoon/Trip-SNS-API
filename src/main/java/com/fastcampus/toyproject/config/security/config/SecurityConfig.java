@@ -3,6 +3,7 @@ package com.fastcampus.toyproject.config.security.config;
 import com.fastcampus.toyproject.config.security.jwt.JwtAccessDeniedHanlder;
 import com.fastcampus.toyproject.config.security.jwt.JwtAuthenticationEntryPoint;
 import com.fastcampus.toyproject.config.security.jwt.TokenProvider;
+import com.fastcampus.toyproject.domain.user.entity.Authority;
 import com.fastcampus.toyproject.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

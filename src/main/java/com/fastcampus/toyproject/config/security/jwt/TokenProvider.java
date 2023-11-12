@@ -1,6 +1,7 @@
 package com.fastcampus.toyproject.config.security.jwt;
 
 import com.fastcampus.toyproject.domain.user.dto.TokenDto;
+import com.fastcampus.toyproject.domain.user.entity.Authority;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -29,7 +30,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class TokenProvider {
 
-    private static final String AUTHORITIES_KEY = "auth";
+    private static final String AUTHORITIES_KEY = "roles";
     private static final String BEARER_TYPE = "Bearer";
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;            // 30분
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;  // 7일
@@ -54,6 +55,7 @@ public class TokenProvider {
         String accessToken = Jwts.builder()
             .setSubject(authentication.getName())
             .claim(AUTHORITIES_KEY, authrities)
+            .claim("roles", Authority.ROLE_USER.getAuthority())
             .setExpiration(accessTokenExpiresIn)
             .signWith(key, SignatureAlgorithm.HS256)
             .compact();
