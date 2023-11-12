@@ -49,7 +49,7 @@ public class TripController {
     }
 
     @GetMapping()
-    public ResponseDTO<List<TripResponse>> searchTripName(
+    public ResponseDTO<List<TripResponse>> searchTripListByKeyword(
             @RequestParam("keyword") String keyword
     ) {
         System.out.println("keyword : " + keyword);
