@@ -7,6 +7,7 @@ import com.fastcampus.toyproject.domain.trip.dto.TripRequest;
 import com.fastcampus.toyproject.domain.trip.dto.TripResponse;
 import com.fastcampus.toyproject.domain.trip.service.TripService;
 import java.util.List;
+import java.util.Optional;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -44,6 +46,20 @@ public class TripController {
         return ResponseDTO.ok("상세 여행 조회 완료",
             tripService.getTripDetail(tripId)
         );
+    }
+
+    @GetMapping()
+    public ResponseDTO<List<TripResponse>> searchTripName(
+            @RequestParam("keyword") String keyword
+    ) {
+        System.out.println("keyword : " + keyword);
+        Optional<List<TripResponse>> optional = tripService.getTripByKeyword(keyword);
+        if (optional.get().size() == 0) {
+            return ResponseDTO.ok(
+                "검색된 여행이 없습니다.", null
+            );
+        }
+        return ResponseDTO.ok("여행 검색 완료", optional.get());
     }
 
     @PostMapping()
