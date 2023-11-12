@@ -1,0 +1,9 @@
+POST http://localhost:8080/api/user/2/trip
+Content-Type: application/json
+
+{
+  "tripName": "~일본~",
+  "startDate": "2023-03-02",
+  "endDate": "2023-03-10",
+  "isDomestic": false
+}

@@ -2,8 +2,8 @@ POST http://localhost:8080/api/user/1/trip
 Content-Type: application/json
 
 {
-  "tripName": "유럽 여행",
+  "tripName": "즐거운일본여행",
   "startDate": "2023-03-02",
-  "endDate": "2023-04-01",
-  "isDomestic": true
+  "endDate": "2023-03-10",
+  "isDomestic": false
 }
