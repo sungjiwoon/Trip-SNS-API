@@ -1,22 +1,18 @@
 package com.fastcampus.toyproject.domain.trip.exception;
 
 
+import com.fastcampus.toyproject.common.exception.DefaultException;
+import com.fastcampus.toyproject.common.exception.ExceptionCode;
 import lombok.Getter;
 
 @Getter
-public class TripException extends RuntimeException {
+public class TripException extends DefaultException {
 
-    TripExceptionCode errorCode;
+    ExceptionCode errorCode;
     String errorMsg;
 
-    public TripException(TripExceptionCode errorCode, String errorMsg) {
-        super(errorCode.getMsg());
-        this.errorCode = errorCode;
-        this.errorMsg = errorMsg;
-    }
-
     public TripException(TripExceptionCode errorCode) {
-        super(errorCode.getMsg());
+        super();
         this.errorCode = errorCode;
         this.errorMsg = errorCode.getMsg();
     }
