@@ -45,9 +45,8 @@ public class ErrorResponseDTO {
                 .collect(Collectors.toList());
 
         return new ErrorResponseDTO(
-                BAD_REQUEST.getStatus(), BAD_REQUEST.getCode(), String.join(", ",msgList)
+                BAD_REQUEST.getStatus(), BAD_REQUEST.getCode(), String.join(", ", msgList)
         );
-
     }
 
 }
