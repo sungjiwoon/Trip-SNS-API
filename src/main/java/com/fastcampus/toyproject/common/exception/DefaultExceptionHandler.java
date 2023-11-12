@@ -76,13 +76,19 @@ public class DefaultExceptionHandler {
         );
     }
 
+    /**
+     * @Valid 를 통해 나타나는 예외 처리
+     * @param e
+     * @param request
+     * @return
+     */
     @ExceptionHandler(value = {
             MethodArgumentNotValidException.class
     })
     public ResponseEntity<ErrorResponseDTO> handleArgumentNotVaildException(
             MethodArgumentNotValidException e, HttpServletRequest request
     ) {
-        log.error("request error url : {}, message : {}",
+        log.error("MethodArgumentNotValid error url : {}, message : {}",
                 request.getRequestURI(),
                 e.getMessage()
         );
@@ -92,6 +98,13 @@ public class DefaultExceptionHandler {
                 HttpStatus.BAD_REQUEST
         );
     }
+
+    /**
+     * 기타 예외 처리
+     * @param e
+     * @param request
+     * @return
+     */
 
     @ExceptionHandler(value = {
         Exception.class
