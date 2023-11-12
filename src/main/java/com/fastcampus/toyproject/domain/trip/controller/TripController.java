@@ -9,7 +9,10 @@ import com.fastcampus.toyproject.domain.trip.service.TripService;
 import java.util.List;
 import java.util.Optional;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,8 +51,10 @@ public class TripController {
         );
     }
 
-    @GetMapping()
+    @GetMapping("/search")
     public ResponseDTO<List<TripResponse>> searchTripListByKeyword(
+            @NotBlank(message = "검색어를 채워주세요")
+            @Range(min = 1, max = 10, message = "검색어는 한 글자 이상이어야 합니다.")
             @RequestParam("keyword") String keyword
     ) {
         System.out.println("keyword : " + keyword);
