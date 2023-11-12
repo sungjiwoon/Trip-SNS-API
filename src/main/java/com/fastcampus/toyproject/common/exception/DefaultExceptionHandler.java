@@ -58,7 +58,6 @@ public class DefaultExceptionHandler {
     @ExceptionHandler(value = {
         HttpRequestMethodNotSupportedException.class,
         HttpMessageNotReadableException.class,
-        MethodArgumentNotValidException.class,
         InvalidFormatException.class
     })
     public ResponseEntity<ErrorResponseDTO> handleBadRequest(
@@ -74,7 +73,23 @@ public class DefaultExceptionHandler {
         return new ResponseEntity<>(
             ErrorResponseDTO.error(badError),
             HttpStatus.BAD_REQUEST
+        );
+    }
 
+    @ExceptionHandler(value = {
+            MethodArgumentNotValidException.class
+    })
+    public ResponseEntity<ErrorResponseDTO> handleArgumentNotVaildException(
+            MethodArgumentNotValidException e, HttpServletRequest request
+    ) {
+        log.error("request error url : {}, message : {}",
+                request.getRequestURI(),
+                e.getMessage()
+        );
+
+        return new ResponseEntity<>(
+                ErrorResponseDTO.error(e),
+                HttpStatus.BAD_REQUEST
         );
     }
 

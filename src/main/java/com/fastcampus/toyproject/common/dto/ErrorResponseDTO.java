@@ -1,12 +1,19 @@
 package com.fastcampus.toyproject.common.dto;
 
+import static com.fastcampus.toyproject.common.exception.DefaultExceptionCode.BAD_REQUEST;
 import static com.fastcampus.toyproject.common.exception.DefaultExceptionCode.INTERNAL_SERVER_ERROR;
 
-import com.fastcampus.toyproject.common.exception.DefaultExceptionCode;
 import com.fastcampus.toyproject.common.exception.ExceptionCode;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 @Getter
 @RequiredArgsConstructor
@@ -32,5 +39,15 @@ public class ErrorResponseDTO {
         );
     }
 
+    public static ErrorResponseDTO error(MethodArgumentNotValidException e) {
+        List<String> msgList = e.getAllErrors().stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.toList());
+
+        return new ErrorResponseDTO(
+                BAD_REQUEST.getStatus(), BAD_REQUEST.getCode(), String.join(", ",msgList)
+        );
+
+    }
 
 }

@@ -21,19 +21,19 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 public class ItineraryRequest {
 
-    @NotNull
+    @NotNull(message = "여정 타입을 입력하세요. ")
     private ItineraryType type;
 
-    @NotNull
+    @NotNull(message = "여정 이름을 입력하세요. ")
     private String item;
 
-    @NotNull
+    @NotNull(message = "출발 날짜를 입력하세요.")
     private LocalDateTime startDate;
 
-    @NotNull
+    @NotNull(message = "도착 날짜를 입력하세요.")
     private LocalDateTime endDate;
 
-    @NotNull
+    @NotNull(message = "여정 순서를 입력하세요.")
     @Min(1)
     private Integer order;
 
