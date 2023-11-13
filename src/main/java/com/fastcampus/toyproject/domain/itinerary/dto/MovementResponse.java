@@ -21,7 +21,6 @@ public class MovementResponse extends ItineraryResponse {
     private LocalDateTime arrivalDate;
     private String departurePlace;
     private String arrivalPlace;
-    private String transportation;
     private String timeDifference;
     private String departureLocation;
     private String arrivalLocation;
