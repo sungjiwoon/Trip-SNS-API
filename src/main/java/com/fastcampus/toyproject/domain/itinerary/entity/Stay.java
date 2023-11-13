@@ -35,7 +35,7 @@ public class Stay extends Itinerary {
     private Double lng;
 
     public void updateStay(ItineraryUpdateRequest req) {
-        super.updateItineraryName(req.getItem());
+        super.updateItineraryName(req.getName());
         super.updateItineraryOrder(req.getOrder());
         this.departureDate = req.getStartDate();
         this.arrivalDate = req.getEndDate();

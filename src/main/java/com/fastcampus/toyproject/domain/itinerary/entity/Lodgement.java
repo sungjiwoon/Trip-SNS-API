@@ -35,7 +35,7 @@ public class Lodgement extends Itinerary {
     private Double lng;
 
     public void updateLodgement(ItineraryUpdateRequest req) {
-        super.updateItineraryName(req.getItem());
+        super.updateItineraryName(req.getName());
         super.updateItineraryOrder(req.getOrder());
         this.checkIn = req.getStartDate();
         this.checkOut = req.getEndDate();
