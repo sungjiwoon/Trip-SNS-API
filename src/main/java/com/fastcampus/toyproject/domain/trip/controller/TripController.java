@@ -6,6 +6,7 @@ import com.fastcampus.toyproject.domain.trip.dto.TripDetailResponse;
 import com.fastcampus.toyproject.domain.trip.dto.TripRequest;
 import com.fastcampus.toyproject.domain.trip.dto.TripResponse;
 import com.fastcampus.toyproject.domain.trip.service.TripService;
+import com.fastcampus.toyproject.domain.user.entity.User;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/trip")
+@Slf4j
 public class TripController {
 
     private final TripService tripService;
@@ -72,15 +74,18 @@ public class TripController {
 
     @PostMapping()
     public ResponseDTO<TripResponse> insertTrip(
-        @PathVariable final Long userId,
+        Authentication authentication,
         @Valid @RequestBody final TripRequest tripRequest
     ) {
         DateUtil.isStartDateEarlierThanEndDate(
             tripRequest.getStartDate(),
             tripRequest.getEndDate()
         );
+
+        //User user = (User) authentication.getPrincipal();
+        //log.info("TripController:: user name : {} ", user.getName());
         return ResponseDTO.ok("여행 삽입 완료",
-            tripService.insertTrip(userId, tripRequest)
+            tripService.insertTrip(1L, tripRequest)
         );
     }
 

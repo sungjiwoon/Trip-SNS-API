@@ -34,10 +34,6 @@ public class Movement extends Itinerary {
     @Comment("도착 장소")
     private String arrivalPlace;
 
-    @Column(nullable = false)
-    @Comment("운송수단이름")
-    private String transportation;
-
     @Comment("출발지 위치 정보")
     private String departurePlaceInfo;
 
@@ -57,9 +53,8 @@ public class Movement extends Itinerary {
     private Double arrivalLng;
 
     public void updateMovement(ItineraryUpdateRequest req) {
-        super.updateItineraryName(req.getMovementName());
+        super.updateItineraryName(req.getName());
         super.updateItineraryOrder(req.getOrder());
-        this.transportation = req.getItem();
         this.departureDate = req.getStartDate();
         this.departurePlace = req.getDeparturePlace();
         this.arrivalDate = req.getEndDate();

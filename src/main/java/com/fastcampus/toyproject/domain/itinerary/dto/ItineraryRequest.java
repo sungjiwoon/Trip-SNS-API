@@ -25,7 +25,7 @@ public class ItineraryRequest {
     private ItineraryType type;
 
     @NotNull(message = "여정 이름을 입력하세요. ")
-    private String item;
+    private String name;
 
     @NotNull(message = "출발 날짜를 입력하세요.")
     private LocalDateTime startDate;
@@ -39,15 +39,5 @@ public class ItineraryRequest {
 
     private String departurePlace;
     private String arrivalPlace;
-
-    public String getMovementName() {
-        if (this.departurePlace == null) {
-            throw new ItineraryException(EMPTY_DEPARTURE_PLACE);
-        }
-        if (this.arrivalPlace == null) {
-            throw new ItineraryException(EMPTY_ARRIVAL_PLACE);
-        }
-        return this.departurePlace + " -> " + this.arrivalPlace;
-    }
 
 }
