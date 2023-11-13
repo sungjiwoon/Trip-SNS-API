@@ -2,6 +2,7 @@ package com.fastcampus.toyproject.domain.itinerary.service;
 
 import static com.fastcampus.toyproject.domain.itinerary.exception.ItineraryExceptionCode.EMPTY_ITINERARY;
 import static com.fastcampus.toyproject.domain.itinerary.exception.ItineraryExceptionCode.ITINERARY_ALREADY_DELETED;
+import static com.fastcampus.toyproject.domain.itinerary.exception.ItineraryExceptionCode.ITINERARY_SAVE_FAILED;
 import static com.fastcampus.toyproject.domain.itinerary.exception.ItineraryExceptionCode.NO_ITINERARY;
 import static com.fastcampus.toyproject.domain.trip.exception.TripExceptionCode.NO_SUCH_TRIP;
 
@@ -17,6 +18,7 @@ import com.fastcampus.toyproject.domain.itinerary.util.ItineraryOrderUtil;
 import com.fastcampus.toyproject.domain.trip.entity.Trip;
 import com.fastcampus.toyproject.domain.trip.exception.TripException;
 import com.fastcampus.toyproject.domain.trip.repository.TripRepository;
+import com.fastcampus.toyproject.domain.trip.service.TripService;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -30,9 +32,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ItineraryService {
 
-    private final TripRepository tripRepository;
+    private final TripService tripService;
     private final ItineraryRepository itineraryRepository;
-
 
     /**
      * trip 객체를 이용하여 연관된 itinerary 리스트 반환하는 메소드
@@ -80,9 +81,9 @@ public class ItineraryService {
         Long tripId, List<ItineraryRequest> itineraryRequests
     ) {
         /*
-        0. tripid를 통한 trip 객체 찾기. (method : getTrip(tripId))
-        1. 여정 테이블에서 모든 값 가져오기.
-        2. 현 request 에서 entity로 변환하여 리스트에 추가.
+        1. tripid를 통한 trip 객체 찾기. (method : getTrip(tripId))
+        2. 여정 테이블에서 모든 값 가져오기.
+        3. 현 request 에서 entity로 변환하여 리스트에 추가.
         4. response 리스트 정렬. (오더 순서대로)
          */
         List<ItineraryResponse> itineraryResponseList = new ArrayList<>();
@@ -94,13 +95,16 @@ public class ItineraryService {
         for (ItineraryRequest ir : itineraryRequests) {
             itineraryList.add(ItineraryFactory.getItineraryEntity(trip, ir));
         }
+
         List<Itinerary> saveItineraryList = itineraryRepository.saveAll(itineraryList);
-        if (saveItineraryList != null) {
-            for (Itinerary it : saveItineraryList) {
-                itineraryResponseList.add(
-                        ItineraryResponseFactory.getItineraryResponse(it)
-                );
-            }
+        if (saveItineraryList == null) {
+            throw new ItineraryException(ITINERARY_SAVE_FAILED);
+        }
+
+        for (Itinerary it : saveItineraryList) {
+            itineraryResponseList.add(
+                    ItineraryResponseFactory.getItineraryResponse(it)
+            );
         }
         ItineraryOrderUtil.sortItineraryResponseListByOrder(itineraryResponseList);
         return itineraryResponseList;
@@ -151,9 +155,7 @@ public class ItineraryService {
      * @return
      */
     private Trip getTrip(Long tripId) {
-        return tripRepository
-            .findById(tripId)
-            .orElseThrow(() -> new TripException(NO_SUCH_TRIP));
+        return tripService.getTripByTripId(tripId);
     }
 
     /**
@@ -181,6 +183,7 @@ public class ItineraryService {
         }
 
         List<ItineraryResponse> deleteItList = new ArrayList<>();
+
         //2. 여정들 가져오기 (id만 적힌것들) -> delete 처리
         for (Long id : deleteIdList) {
             Itinerary it = itineraryRepository
@@ -194,18 +197,6 @@ public class ItineraryService {
         //3. 남은 여정들의 순서 재정의 - 여정 순서대로 entity 정렬
         sortAgainItineraryOrder(getItineraryList(getTrip(tripId)));
         return deleteItList;
-    }
-
-    /**
-     * trip 객체에 연관된 itinerary 들 전부 삭제 처리하는 메소드
-     *
-     * @param trip
-     */
-    @Transactional
-    public void deleteAllItineraryByTrip(Trip trip) {
-        for (Itinerary it : getItineraryList(trip)) {
-            it.delete();
-        }
     }
 
     /**
