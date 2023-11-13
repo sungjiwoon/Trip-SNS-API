@@ -17,7 +17,9 @@ import com.fastcampus.toyproject.domain.trip.repository.TripRepository;
 import com.fastcampus.toyproject.domain.user.entity.User;
 import com.fastcampus.toyproject.domain.user.repository.UserRepository;
 import com.fastcampus.toyproject.domain.user.service.UserService;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -118,10 +120,8 @@ public class TripService {
 
         Trip saveTrip = tripRepository.save(trip);
         if (saveTrip != null) {
-            //System.out.println("hi:" + trip.getBaseTimeEntity().getCreatedAt());
-            TripResponse.fromEntity(trip);
+            return TripResponse.fromEntity(trip);
         }
-
         return null;
     }
 
@@ -154,5 +154,23 @@ public class TripService {
         trip.delete();
         itineraryService.deleteAllItineraryByTrip(trip);
         return TripResponse.fromEntity(tripRepository.save(trip));
+    }
+
+    /**
+     * keyword 검색을 통한 여행 이름 리스트 출력
+     * @param keyword
+     * @return List<TripResponse>
+     */
+    @Transactional(readOnly = true)
+    public Optional<List<TripResponse>> getTripByKeyword(String keyword) {
+        Optional<List<Trip>> optionalTrips = tripRepository
+                .findByTripNameContains(keyword);
+
+        List<TripResponse> tripResponseList = new ArrayList<>();
+        for (Trip trip : optionalTrips.get()) {
+            System.out.println("search: " + trip.getTripName());
+            tripResponseList.add(TripResponse.fromEntity(trip));
+        }
+        return Optional.ofNullable(tripResponseList);
     }
 }

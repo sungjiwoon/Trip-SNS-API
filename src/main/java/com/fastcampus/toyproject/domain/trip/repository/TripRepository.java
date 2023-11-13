@@ -14,4 +14,5 @@ public interface TripRepository extends JpaRepository<Trip, Long> {
     @Query("SELECT DISTINCT t FROM Trip t LEFT outer join FETCH t.itineraryList i WHERE i.baseTimeEntity.deletedAt != null AND t.tripId = :tripId")
     Optional<Trip> findByTripIdAndItineraryDeletedIsFalse(@Param("tripId") Long tripId);
 
+    Optional<List<Trip>> findByTripNameContains(String keyword);
 }

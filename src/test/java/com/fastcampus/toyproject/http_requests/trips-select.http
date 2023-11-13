@@ -1,3 +1,0 @@
-GET http://localhost:8080/api/trip/1/trips/1
-Content-Type: application/json
-
