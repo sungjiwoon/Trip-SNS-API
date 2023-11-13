@@ -3,16 +3,10 @@ package com.fastcampus.toyproject.config.security.config;
 import com.fastcampus.toyproject.config.security.jwt.JwtAccessDeniedHanlder;
 import com.fastcampus.toyproject.config.security.jwt.JwtAuthenticationEntryPoint;
 import com.fastcampus.toyproject.config.security.jwt.TokenProvider;
-import com.fastcampus.toyproject.domain.user.entity.Authority;
-import com.fastcampus.toyproject.domain.user.repository.UserRepository;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -28,18 +22,16 @@ import org.springframework.web.filter.CorsFilter;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private static final String[] auth = {
+        "/auth", "/auth/**"
+    };
+    private static final String[] getTrip = {
+        "/api/trip", "/api/trip/**"
+    };
     private final TokenProvider tokenProvider;
     private final CorsFilter corsFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHanlder jwtAccessDeniedHanlder;
-
-    private static final String[] auth = {
-        "/auth", "/auth/**"
-    };
-
-    private static final String[] getTrip = {
-        "/api/trip", "/api/trip/**"
-    };
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -84,8 +76,6 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-
 
 
 }

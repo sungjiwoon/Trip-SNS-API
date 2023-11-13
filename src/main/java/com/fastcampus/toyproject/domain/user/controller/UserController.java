@@ -8,6 +8,8 @@ import com.fastcampus.toyproject.domain.user.dto.UserRequestDTO;
 import com.fastcampus.toyproject.domain.user.dto.UserResponseDTO;
 import com.fastcampus.toyproject.domain.user.entity.User;
 import com.fastcampus.toyproject.domain.user.service.UserService;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.catalina.connector.Response;
@@ -33,8 +35,21 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseDTO<TokenDto> login(@Valid @RequestBody LoginDto loginDto){
-        return ResponseDTO.ok("로그인 성공", userService.login(loginDto));
+    public ResponseDTO<Void> login(
+        @Valid @RequestBody LoginDto loginDto,
+        HttpServletResponse response
+    ){
+
+        TokenDto tokenDto = userService.login(loginDto);
+
+        Cookie cookie = new Cookie("access_token", tokenDto.getAccessToken() );
+        cookie.setMaxAge(tokenDto.getAccessTokenExpiresIn().intValue());
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+
+        response.addCookie(cookie);
+
+        return ResponseDTO.ok("로그인 성공");
     }
 
     @PostMapping("/reissue")
