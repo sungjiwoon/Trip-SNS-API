@@ -45,7 +45,7 @@ public class TokenProvider {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public TokenDto generateTokenDto(Authentication authentication) {
+    public TokenDto generateTokenDto(UserPrincipal authentication) {
 
         String authrities = authentication.getAuthorities().stream()
             .map(GrantedAuthority::getAuthority)
@@ -56,9 +56,11 @@ public class TokenProvider {
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
 
         String accessToken = Jwts.builder()
-            .setSubject(authentication.getName())
-            .claim(AUTHORITIES_KEY, authrities)
-            .claim("roles", Authority.ROLE_USER.getAuthority())
+            .setSubject(authentication.getEmail())
+            .claim("userId", authentication.getUserId())
+            .claim("email", authentication.getEmail())
+            .claim("name", authentication.getName())
+            .claim("roles", authentication.getAuthority())
             .setExpiration(accessTokenExpiresIn)
             .signWith(key, SignatureAlgorithm.HS256)
             .compact();
@@ -91,10 +93,11 @@ public class TokenProvider {
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
 
-        UserDetails principal = new User(claims.getSubject(), "", authorities);
+//        UserDetails principal = new User(claims.getSubject(), "", authorities);
 
-        return new UsernamePasswordAuthenticationToken(principal, "", authorities);
+        return new UserPrincipal(claims, authorities);
 
+//        return new UserPrincipal(authorities,)
     }
 
     public boolean validateToken(String token) {
