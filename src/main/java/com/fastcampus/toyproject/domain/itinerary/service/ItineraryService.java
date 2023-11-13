@@ -90,17 +90,18 @@ public class ItineraryService {
 
         validateItineraryRequestOrder(itineraryRequests, trip);
 
+        List<Itinerary> itineraryList = new ArrayList<>();
         for (ItineraryRequest ir : itineraryRequests) {
-
-            Itinerary itinerary = ItineraryFactory.getItineraryEntity(trip, ir);
-
-            Itinerary savedItinerary = itineraryRepository.save(itinerary);
-
-            itineraryResponseList.add(
-                ItineraryResponseFactory.getItineraryResponse(savedItinerary)
-            );
+            itineraryList.add(ItineraryFactory.getItineraryEntity(trip, ir));
         }
-
+        List<Itinerary> saveItineraryList = itineraryRepository.saveAll(itineraryList);
+        if (saveItineraryList != null) { //요부분
+            for (Itinerary it : saveItineraryList) {
+                itineraryResponseList.add(
+                        ItineraryResponseFactory.getItineraryResponse(it)
+                );
+            }
+        }
         ItineraryOrderUtil.sortItineraryResponseListByOrder(itineraryResponseList);
         return itineraryResponseList;
     }
