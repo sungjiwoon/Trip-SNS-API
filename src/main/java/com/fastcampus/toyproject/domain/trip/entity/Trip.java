@@ -22,6 +22,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -78,7 +79,6 @@ public class Trip {
     @Comment("국내여행 여부")
     private Boolean isDomestic;
 
-    //    @ColumnDefault("0") // 검색
     @Comment("좋아요 개수")
     private Integer likesCount;
 
@@ -94,6 +94,13 @@ public class Trip {
         this.startDate = tripDTO.getStartDate();
         this.endDate = tripDTO.getEndDate();
         this.isDomestic = tripDTO.getIsDomestic();
+    }
+
+    @PrePersist
+    public void prePersist() {
+        if (this.likesCount == null) {
+            this.likesCount = 0;
+        }
     }
 
 
