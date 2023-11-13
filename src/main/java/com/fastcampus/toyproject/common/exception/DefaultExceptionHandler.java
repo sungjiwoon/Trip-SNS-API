@@ -33,13 +33,13 @@ public class DefaultExceptionHandler {
      * @return
      */
     @ExceptionHandler(value = {
-        TripException.class, ItineraryException.class, DefaultException.class
+        DefaultException.class
     })
     public ResponseEntity<ErrorResponseDTO> handleDefaultException(
         DefaultException e,
         HttpServletRequest request
     ) {
-        log.error("error!!!! status : {} , errorCode : {}, message : {}, url : {}",
+        log.error("custom error!!!! status : {} , errorCode : {}, message : {}, url : {}",
             e.getErrorCode().getStatus(),
             e.getErrorCode().getCode(),
             e.getErrorCode().getMsg(),
