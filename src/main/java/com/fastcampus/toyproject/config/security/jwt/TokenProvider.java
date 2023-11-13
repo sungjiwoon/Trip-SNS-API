@@ -1,7 +1,6 @@
 package com.fastcampus.toyproject.config.security.jwt;
 
 import com.fastcampus.toyproject.domain.user.dto.TokenDto;
-import com.fastcampus.toyproject.domain.user.dto.UserResponseDTO;
 import com.fastcampus.toyproject.domain.user.entity.Authority;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -15,7 +14,6 @@ import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,7 +41,7 @@ public class TokenProvider {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public TokenDto generateTokenDto(Authentication authentication){
+    public TokenDto generateTokenDto(Authentication authentication) {
 
         String authrities = authentication.getAuthorities().stream()
             .map(GrantedAuthority::getAuthority)
@@ -75,19 +73,19 @@ public class TokenProvider {
 
     }
 
-    public Authentication getAuthentication(String accessToken){
+    public Authentication getAuthentication(String accessToken) {
 
         Claims claims = parseClaims(accessToken);
 
-        if(claims.get(AUTHORITIES_KEY) == null){
+        if (claims.get(AUTHORITIES_KEY) == null) {
             throw new RuntimeException("권한 정보가 없는 토큰 입니다.");
         }
 
         Collection<? extends GrantedAuthority> authorities =
             Arrays.stream(
-                claims.get(AUTHORITIES_KEY).toString().split(","))
-            .map(SimpleGrantedAuthority::new)
-            .collect(Collectors.toList());
+                    claims.get(AUTHORITIES_KEY).toString().split(","))
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
 
         UserDetails principal = new User(claims.getSubject(), "", authorities);
 
@@ -95,18 +93,18 @@ public class TokenProvider {
 
     }
 
-    public boolean validateToken(String token){
+    public boolean validateToken(String token) {
 
-        try{
+        try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
-        } catch (SecurityException | MalformedJwtException e){
+        } catch (SecurityException | MalformedJwtException e) {
             log.info("잘못된 JWT 서명입니다.");
-        } catch (ExpiredJwtException e){
+        } catch (ExpiredJwtException e) {
             log.info("만료된 JWT 토큰입니다.");
-        } catch (UnsupportedJwtException e){
+        } catch (UnsupportedJwtException e) {
             log.info("지원되지 않는 JWT 토큰입니다.");
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             log.info("JWT 토큰이 잘못되었습니다.");
         }
 
@@ -118,7 +116,7 @@ public class TokenProvider {
         try {
             return Jwts.parserBuilder().setSigningKey(key).build()
                 .parseClaimsJws(accessToken).getBody();
-        } catch (ExpiredJwtException e){
+        } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
 
