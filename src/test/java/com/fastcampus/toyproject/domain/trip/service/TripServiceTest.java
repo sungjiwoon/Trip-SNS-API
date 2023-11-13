@@ -42,8 +42,8 @@ class TripServiceTest {
 
     @BeforeEach
     void setUp() {
-        User saveUser = userRepository.save(user);
-        userId = saveUser.getUserId();
+//        User saveUser = userRepository.save(user);
+//        userId = saveUser.getUserId();
         itineraryRequestList.add(ir1);
         itineraryRequestList.add(ir2);
         itineraryRequestList.add(ir3);
@@ -59,8 +59,6 @@ class TripServiceTest {
 //            Assertions.assertNotEquals(it.getBaseTimeEntity().getDeletedAt(), null);
 //        }
     }
-
-
 
     User user = User.builder()
             .email("test@mail.com")
