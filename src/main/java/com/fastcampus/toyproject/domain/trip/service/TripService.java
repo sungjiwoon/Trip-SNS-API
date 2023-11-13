@@ -1,11 +1,12 @@
 package com.fastcampus.toyproject.domain.trip.service;
 
 
+import static com.fastcampus.toyproject.domain.trip.exception.TripExceptionCode.NOT_MATCH_BETWEEN_USER_AND_TRIP;
 import static com.fastcampus.toyproject.domain.trip.exception.TripExceptionCode.NO_SUCH_TRIP;
 
 import com.fastcampus.toyproject.common.BaseTimeEntity;
 import com.fastcampus.toyproject.common.exception.DefaultException;
-import com.fastcampus.toyproject.common.exception.ExceptionCode;
+import com.fastcampus.toyproject.common.exception.DefaultExceptionCode;
 import com.fastcampus.toyproject.domain.itinerary.entity.Itinerary;
 import com.fastcampus.toyproject.domain.itinerary.service.ItineraryService;
 import com.fastcampus.toyproject.domain.trip.dto.TripDetailResponse;
@@ -14,7 +15,6 @@ import com.fastcampus.toyproject.domain.trip.dto.TripResponse;
 import com.fastcampus.toyproject.domain.trip.entity.Trip;
 import com.fastcampus.toyproject.domain.trip.exception.TripException;
 import com.fastcampus.toyproject.domain.trip.repository.TripRepository;
-import com.fastcampus.toyproject.domain.user.entity.User;
 import com.fastcampus.toyproject.domain.user.repository.UserRepository;
 import com.fastcampus.toyproject.domain.user.service.UserService;
 import java.util.ArrayList;
@@ -137,7 +137,7 @@ public class TripService {
         Trip existTrip = getTripByTripId(tripId);
 
         if (!existTrip.getUser().getUserId().equals(memberId)) {
-            throw new DefaultException(ExceptionCode.INVALID_REQUEST, "멤버의 여행 정보가 일치하지 않습니다.");
+            throw new TripException(NOT_MATCH_BETWEEN_USER_AND_TRIP);
         }
 
         existTrip.updateFromDTO(tripRequest);

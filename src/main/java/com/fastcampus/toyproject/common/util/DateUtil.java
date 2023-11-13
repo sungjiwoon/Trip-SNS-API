@@ -1,6 +1,6 @@
 package com.fastcampus.toyproject.common.util;
 
-import static com.fastcampus.toyproject.common.exception.ExceptionCode.STARTDATE_IS_LATER_THAN_ENDDATE;
+import static com.fastcampus.toyproject.common.exception.DefaultExceptionCode.STARTDATE_IS_LATER_THAN_ENDDATE;
 import static java.util.concurrent.TimeUnit.DAYS;
 import static java.util.concurrent.TimeUnit.HOURS;
 import static java.util.concurrent.TimeUnit.MINUTES;

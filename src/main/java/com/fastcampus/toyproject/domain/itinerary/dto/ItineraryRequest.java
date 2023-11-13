@@ -1,7 +1,7 @@
 package com.fastcampus.toyproject.domain.itinerary.dto;
 
-import static com.fastcampus.toyproject.domain.itinerary.exception.ItineraryExceptionCode.ILLEGAL_ARGUMENT_ARRIVALPLACE;
-import static com.fastcampus.toyproject.domain.itinerary.exception.ItineraryExceptionCode.ILLEGAL_ARGUMENT_DEPARTUREPLACE;
+import static com.fastcampus.toyproject.domain.itinerary.exception.ItineraryExceptionCode.EMPTY_ARRIVAL_PLACE;
+import static com.fastcampus.toyproject.domain.itinerary.exception.ItineraryExceptionCode.EMPTY_DEPARTURE_PLACE;
 
 import com.fastcampus.toyproject.domain.itinerary.exception.ItineraryException;
 import com.fastcampus.toyproject.domain.itinerary.type.ItineraryType;
@@ -21,19 +21,19 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 public class ItineraryRequest {
 
-    @NotNull
+    @NotNull(message = "여정 타입을 입력하세요. ")
     private ItineraryType type;
 
-    @NotNull
+    @NotNull(message = "여정 이름을 입력하세요. ")
     private String item;
 
-    @NotNull
+    @NotNull(message = "출발 날짜를 입력하세요.")
     private LocalDateTime startDate;
 
-    @NotNull
+    @NotNull(message = "도착 날짜를 입력하세요.")
     private LocalDateTime endDate;
 
-    @NotNull
+    @NotNull(message = "여정 순서를 입력하세요.")
     @Min(1)
     private Integer order;
 
@@ -42,10 +42,10 @@ public class ItineraryRequest {
 
     public String getMovementName() {
         if (this.departurePlace == null) {
-            throw new ItineraryException(ILLEGAL_ARGUMENT_DEPARTUREPLACE);
+            throw new ItineraryException(EMPTY_DEPARTURE_PLACE);
         }
         if (this.arrivalPlace == null) {
-            throw new ItineraryException(ILLEGAL_ARGUMENT_ARRIVALPLACE);
+            throw new ItineraryException(EMPTY_ARRIVAL_PLACE);
         }
         return this.departurePlace + " -> " + this.arrivalPlace;
     }

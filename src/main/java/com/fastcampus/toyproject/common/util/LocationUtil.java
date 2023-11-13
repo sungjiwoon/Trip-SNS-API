@@ -1,7 +1,7 @@
 package com.fastcampus.toyproject.common.util;
 
 import com.fastcampus.toyproject.common.exception.DefaultException;
-import com.fastcampus.toyproject.common.exception.ExceptionCode;
+import com.fastcampus.toyproject.common.exception.DefaultExceptionCode;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -37,7 +37,7 @@ public class LocationUtil {
             return new URL(
                 baseUrl + URLEncoder.encode(location, StandardCharsets.UTF_8) + "&key=" + key);
         } catch (IOException e) {
-            throw new DefaultException(ExceptionCode.BAD_REQUEST);
+            throw new DefaultException(DefaultExceptionCode.BAD_REQUEST);
         }
     }
 
@@ -79,7 +79,7 @@ public class LocationUtil {
 
 
         } catch (IOException e) {
-            log.error(ExceptionCode.BAD_REQUEST.getMsg());
+            log.error(DefaultExceptionCode.BAD_REQUEST.getMsg());
             return location;
         }
     }

@@ -1,7 +1,7 @@
 package com.fastcampus.toyproject.domain.itinerary.util;
 
 import static com.fastcampus.toyproject.domain.itinerary.exception.ItineraryExceptionCode.DUPLICATE_ITINERARY_ORDER;
-import static com.fastcampus.toyproject.domain.itinerary.exception.ItineraryExceptionCode.INCORRECT_ITNERARY_ORDER;
+import static com.fastcampus.toyproject.domain.itinerary.exception.ItineraryExceptionCode.INCORRECT_ITINERARY_ORDER;
 
 import com.fastcampus.toyproject.common.exception.DefaultException;
 import java.time.LocalDateTime;
@@ -53,7 +53,7 @@ class ItineraryOrderUtilTest {
             ItineraryOrderUtil.validateItinerariesOrder(testList2);
         } catch (DefaultException e) {
             //where
-            Assertions.assertEquals(INCORRECT_ITNERARY_ORDER, e.getErrorCode());
+            Assertions.assertEquals(INCORRECT_ITINERARY_ORDER, e.getErrorCode());
         }
     }
 
