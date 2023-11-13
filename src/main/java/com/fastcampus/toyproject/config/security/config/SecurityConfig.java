@@ -38,7 +38,7 @@ public class SecurityConfig {
     };
 
     private static final String[] getTrip = {
-        "/trip", "/trip/**"
+        "/api/trip", "/api/trip/**"
     };
 
     @Bean
