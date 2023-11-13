@@ -95,7 +95,7 @@ public class ItineraryService {
             itineraryList.add(ItineraryFactory.getItineraryEntity(trip, ir));
         }
         List<Itinerary> saveItineraryList = itineraryRepository.saveAll(itineraryList);
-        if (saveItineraryList != null) { //요부분
+        if (saveItineraryList != null) {
             for (Itinerary it : saveItineraryList) {
                 itineraryResponseList.add(
                         ItineraryResponseFactory.getItineraryResponse(it)
