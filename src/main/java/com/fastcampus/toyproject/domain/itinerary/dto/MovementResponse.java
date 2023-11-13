@@ -37,7 +37,6 @@ public class MovementResponse extends ItineraryResponse {
             .arrivalDate(entity.getArrivalDate())
             .departurePlace(entity.getDeparturePlace())
             .arrivalPlace(entity.getArrivalPlace())
-            .transportation(entity.getTransportation())
             .timeDifference(
                 DateUtil.getTimeBetweenDate(entity.getDepartureDate(), entity.getArrivalDate()))
             .departureLocation(locationUtil.findLocation(entity.getDeparturePlace()))
