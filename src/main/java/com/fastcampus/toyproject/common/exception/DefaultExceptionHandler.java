@@ -34,7 +34,7 @@ public class DefaultExceptionHandler {
      */
     @ExceptionHandler(
         value = {TripException.class, ItineraryException.class,
-                DefaultException.class, RuntimeException.class})
+                DefaultException.class})
     public ResponseEntity<ErrorResponseDTO> handleDefaultException(
         DefaultException e,
         HttpServletRequest request
@@ -117,7 +117,7 @@ public class DefaultExceptionHandler {
      */
 
     @ExceptionHandler(value = {
-        Exception.class, NullPointerException.class
+        Exception.class, RuntimeException.class
     })
     public ResponseEntity<ErrorResponseDTO> handleException(
         Exception e, HttpServletRequest request
