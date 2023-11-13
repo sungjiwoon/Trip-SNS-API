@@ -3,6 +3,7 @@ package com.fastcampus.toyproject.domain.trip.service;
 
 import static com.fastcampus.toyproject.domain.trip.exception.TripExceptionCode.NOT_MATCH_BETWEEN_USER_AND_TRIP;
 import static com.fastcampus.toyproject.domain.trip.exception.TripExceptionCode.NO_SUCH_TRIP;
+import static com.fastcampus.toyproject.domain.trip.exception.TripExceptionCode.TRIP_ALREADY_DELETED;
 
 import com.fastcampus.toyproject.common.BaseTimeEntity;
 import com.fastcampus.toyproject.common.exception.DefaultException;
@@ -93,7 +94,11 @@ public class TripService {
      */
     @Transactional(readOnly = true)
     public TripDetailResponse getTripDetail(Long tripId) {
-        return TripDetailResponse.fromEntity(getTripByTripId(tripId));
+        Trip trip = getTripByTripId(tripId);
+        if (trip.getBaseTimeEntity().getDeletedAt() != null) {
+            throw new TripException(TRIP_ALREADY_DELETED);
+        }
+        return TripDetailResponse.fromEntity(trip);
     }
 
     /**
