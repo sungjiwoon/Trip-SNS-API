@@ -2,6 +2,7 @@ package com.fastcampus.toyproject.domain.user.service;
 
 import com.fastcampus.toyproject.common.BaseTimeEntity;
 import com.fastcampus.toyproject.config.security.jwt.TokenProvider;
+import com.fastcampus.toyproject.config.security.jwt.UserPrincipal;
 import com.fastcampus.toyproject.domain.user.dto.LoginDto;
 import com.fastcampus.toyproject.domain.user.dto.RefreshToken;
 import com.fastcampus.toyproject.domain.user.dto.TokenDto;
@@ -62,8 +63,7 @@ public class UserService {
 //            throw new RuntimeException("비밀번호가 틀립니다.");
 //        }
 
-        UsernamePasswordAuthenticationToken authentication =
-            loginDto.toAuthentication();
+        UserPrincipal authentication = new UserPrincipal(user);
 
         TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
 
@@ -92,7 +92,7 @@ public class UserService {
             throw new RuntimeException("토큰의 유저정보가 일치하지 않습니다.");
         }
 
-        TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
+        TokenDto tokenDto = tokenProvider.generateTokenDto((UserPrincipal) authentication);
 
         RefreshToken newRefreshToken = refreshToken.updateValue(tokenDto.getRefreshToken());
         refreshTokenRepository.save(newRefreshToken);

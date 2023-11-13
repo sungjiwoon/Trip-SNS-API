@@ -1,5 +1,9 @@
 package com.fastcampus.toyproject.config.security.jwt;
 
+import static com.fastcampus.toyproject.config.security.exception.SecurityExcpetionCode.INVALID_TOKEN;
+
+import com.fastcampus.toyproject.config.security.exception.CustomSecurityException;
+import com.fastcampus.toyproject.config.security.exception.SecurityExcpetionCode;
 import com.fastcampus.toyproject.domain.user.dto.TokenDto;
 import com.fastcampus.toyproject.domain.user.entity.Authority;
 import io.jsonwebtoken.Claims;
@@ -41,7 +45,7 @@ public class TokenProvider {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public TokenDto generateTokenDto(Authentication authentication) {
+    public TokenDto generateTokenDto(UserPrincipal authentication) {
 
         String authrities = authentication.getAuthorities().stream()
             .map(GrantedAuthority::getAuthority)
@@ -52,9 +56,11 @@ public class TokenProvider {
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
 
         String accessToken = Jwts.builder()
-            .setSubject(authentication.getName())
-            .claim(AUTHORITIES_KEY, authrities)
-            .claim("roles", Authority.ROLE_USER.getAuthority())
+            .setSubject(authentication.getEmail())
+            .claim("userId", authentication.getUserId())
+            .claim("email", authentication.getEmail())
+            .claim("name", authentication.getName())
+            .claim("roles", authentication.getAuthority())
             .setExpiration(accessTokenExpiresIn)
             .signWith(key, SignatureAlgorithm.HS256)
             .compact();
@@ -78,7 +84,7 @@ public class TokenProvider {
         Claims claims = parseClaims(accessToken);
 
         if (claims.get(AUTHORITIES_KEY) == null) {
-            throw new RuntimeException("권한 정보가 없는 토큰 입니다.");
+            throw new CustomSecurityException(INVALID_TOKEN);
         }
 
         Collection<? extends GrantedAuthority> authorities =
@@ -87,10 +93,11 @@ public class TokenProvider {
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
 
-        UserDetails principal = new User(claims.getSubject(), "", authorities);
+//        UserDetails principal = new User(claims.getSubject(), "", authorities);
 
-        return new UsernamePasswordAuthenticationToken(principal, "", authorities);
+        return new UserPrincipal(claims, authorities);
 
+//        return new UserPrincipal(authorities,)
     }
 
     public boolean validateToken(String token) {
@@ -98,7 +105,7 @@ public class TokenProvider {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
-        } catch (SecurityException | MalformedJwtException e) {
+        } catch (CustomSecurityException | MalformedJwtException e) {
             log.info("잘못된 JWT 서명입니다.");
         } catch (ExpiredJwtException e) {
             log.info("만료된 JWT 토큰입니다.");
