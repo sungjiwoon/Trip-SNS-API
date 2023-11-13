@@ -1,5 +1,9 @@
 package com.fastcampus.toyproject.config.security.jwt;
 
+import static com.fastcampus.toyproject.config.security.exception.SecurityExcpetionCode.INVALID_TOKEN;
+
+import com.fastcampus.toyproject.config.security.exception.CustomSecurityException;
+import com.fastcampus.toyproject.config.security.exception.SecurityExcpetionCode;
 import com.fastcampus.toyproject.domain.user.dto.TokenDto;
 import com.fastcampus.toyproject.domain.user.entity.Authority;
 import io.jsonwebtoken.Claims;
@@ -78,7 +82,7 @@ public class TokenProvider {
         Claims claims = parseClaims(accessToken);
 
         if (claims.get(AUTHORITIES_KEY) == null) {
-            throw new RuntimeException("권한 정보가 없는 토큰 입니다.");
+            throw new CustomSecurityException(INVALID_TOKEN);
         }
 
         Collection<? extends GrantedAuthority> authorities =
@@ -98,7 +102,7 @@ public class TokenProvider {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
-        } catch (SecurityException | MalformedJwtException e) {
+        } catch (CustomSecurityException | MalformedJwtException e) {
             log.info("잘못된 JWT 서명입니다.");
         } catch (ExpiredJwtException e) {
             log.info("만료된 JWT 토큰입니다.");
