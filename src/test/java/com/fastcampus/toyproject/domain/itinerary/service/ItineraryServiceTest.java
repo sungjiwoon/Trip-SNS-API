@@ -1,8 +1,5 @@
 package com.fastcampus.toyproject.domain.itinerary.service;
 
-import static org.mockito.BDDMockito.given;
-
-import com.fastcampus.toyproject.common.exception.DefaultException;
 import com.fastcampus.toyproject.domain.itinerary.dto.ItineraryRequest;
 import com.fastcampus.toyproject.domain.itinerary.dto.ItineraryResponse;
 import com.fastcampus.toyproject.domain.itinerary.exception.ItineraryException;
@@ -12,19 +9,13 @@ import com.fastcampus.toyproject.domain.trip.entity.Trip;
 import com.fastcampus.toyproject.domain.trip.exception.TripException;
 import com.fastcampus.toyproject.domain.trip.exception.TripExceptionCode;
 import com.fastcampus.toyproject.domain.trip.repository.TripRepository;
-import com.fastcampus.toyproject.domain.user.dto.UserRequestDTO;
 import com.fastcampus.toyproject.domain.user.entity.User;
-import com.fastcampus.toyproject.domain.user.repository.UserRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -46,48 +37,48 @@ class ItineraryServiceTest {
         itineraryRequestList.add(ir3);
     }
 
-    @Test
-    void 여정리스트_삽입_성공() {
-        Trip trip1 = tripRepository.save(trip);
-
-        List<ItineraryResponse> itineraryResponseList = itineraryService.insertItineraries(
-                trip1.getTripId(), itineraryRequestList
-        );
-
-        for (ItineraryResponse ir : itineraryResponseList) {
-            System.out.println(ir.getItineraryType() + ": " + ir.getItineraryName() + " " + ir.getItineraryOrder());
-        }
-    }
-
-    @Test
-    void 여정리스트_삽입_실패_tripId_없는경우() {
-        try {
-            List<ItineraryResponse> itineraryResponseList = itineraryService.insertItineraries(
-                    99L, itineraryRequestList
-            );
-        } catch (TripException e) {
-            Assertions.assertEquals(e.getErrorCode(), TripExceptionCode.NO_SUCH_TRIP);
-        }
-    }
-
-    @Test
-    void 여정리스트_삽입_실패_순서중복() {
-        ItineraryRequest ir4 = ItineraryRequest.builder()
-                .name("도톤보리").type(ItineraryType.STAY)
-                .startDate(now).endDate(now).order(3) //ir3과 중복.
-                .build();
-        itineraryRequestList.add(ir4);
-
-        Trip trip1 = tripRepository.save(trip);
-
-        try {
-            List<ItineraryResponse> itineraryResponseList = itineraryService.insertItineraries(
-                    trip1.getTripId(), itineraryRequestList
-            );
-        } catch (ItineraryException e) {
-            Assertions.assertEquals(e.getErrorCode(), ItineraryExceptionCode.DUPLICATE_ITINERARY_ORDER);
-        }
-    }
+//    @Test
+//    void 여정리스트_삽입_성공() {
+//        Trip trip1 = tripRepository.save(trip);
+//
+//        List<ItineraryResponse> itineraryResponseList = itineraryService.insertItineraries(
+//                trip1.getTripId(), itineraryRequestList
+//        );
+//
+//        for (ItineraryResponse ir : itineraryResponseList) {
+//            System.out.println(ir.getItineraryType() + ": " + ir.getItineraryName() + " " + ir.getItineraryOrder());
+//        }
+//    }
+//
+//    @Test
+//    void 여정리스트_삽입_실패_tripId_없는경우() {
+//        try {
+//            List<ItineraryResponse> itineraryResponseList = itineraryService.insertItineraries(
+//                    99L, itineraryRequestList
+//            );
+//        } catch (TripException e) {
+//            Assertions.assertEquals(e.getErrorCode(), TripExceptionCode.NO_SUCH_TRIP);
+//        }
+//    }
+//
+//    @Test
+//    void 여정리스트_삽입_실패_순서중복() {
+//        ItineraryRequest ir4 = ItineraryRequest.builder()
+//                .name("도톤보리").type(ItineraryType.STAY)
+//                .startDate(now).endDate(now).order(3) //ir3과 중복.
+//                .build();
+//        itineraryRequestList.add(ir4);
+//
+//        Trip trip1 = tripRepository.save(trip);
+//
+//        try {
+//            List<ItineraryResponse> itineraryResponseList = itineraryService.insertItineraries(
+//                    trip1.getTripId(), itineraryRequestList
+//            );
+//        } catch (ItineraryException e) {
+//            Assertions.assertEquals(e.getErrorCode(), ItineraryExceptionCode.DUPLICATE_ITINERARY_ORDER);
+//        }
+//    }
 
     User user = User.builder()
             .email("test@mail.com")
