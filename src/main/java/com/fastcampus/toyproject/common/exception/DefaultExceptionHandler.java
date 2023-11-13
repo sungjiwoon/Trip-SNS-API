@@ -32,9 +32,9 @@ public class DefaultExceptionHandler {
      * @param request
      * @return
      */
-    @ExceptionHandler(
-        value = {TripException.class, ItineraryException.class,
-                DefaultException.class})
+    @ExceptionHandler(value = {
+        TripException.class, ItineraryException.class, DefaultException.class
+    })
     public ResponseEntity<ErrorResponseDTO> handleDefaultException(
         DefaultException e,
         HttpServletRequest request
@@ -85,7 +85,7 @@ public class DefaultExceptionHandler {
      * @return
      */
     @ExceptionHandler(value = {
-            MethodArgumentNotValidException.class
+        MethodArgumentNotValidException.class
     })
     public ResponseEntity<ErrorResponseDTO> handleArgumentNotVaildException(
             MethodArgumentNotValidException e, HttpServletRequest request
