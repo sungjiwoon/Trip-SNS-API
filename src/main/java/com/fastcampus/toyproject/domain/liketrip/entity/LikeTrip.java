@@ -12,9 +12,15 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Comment;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+@Getter
+@Setter
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 public class LikeTrip {
@@ -39,4 +45,10 @@ public class LikeTrip {
 
     @Embedded
     private BaseTimeEntity baseTimeEntity;
+
+    public LikeTrip(User user, Trip trip, Boolean isLike) {
+        this.user = user;
+        this.trip = trip;
+        this.isLike = isLike;
+    }
 }
