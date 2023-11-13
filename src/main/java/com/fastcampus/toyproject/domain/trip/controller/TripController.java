@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/user/{userId}/trip")
+@RequestMapping("/api/trip")
 public class TripController {
 
     private final TripService tripService;

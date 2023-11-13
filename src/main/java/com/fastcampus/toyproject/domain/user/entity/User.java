@@ -4,11 +4,16 @@ import com.fastcampus.toyproject.common.BaseTimeEntity;
 import com.fastcampus.toyproject.domain.liketrip.entity.LikeTrip;
 import com.fastcampus.toyproject.domain.reply.entity.Reply;
 import com.fastcampus.toyproject.domain.trip.entity.Trip;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,6 +25,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Getter
@@ -27,7 +34,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @Builder
-public class User {
+public class User{
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,14 +43,18 @@ public class User {
     private Long userId;
 
     @Column(nullable = false)
-    @Comment("비밀번호")
-    private String password;
-
-    @Column(nullable = false)
     @Comment("이메일")
     private String email;
 
-    private String authority;
+    @Column(nullable = false)
+    @Comment("비밀번호")
+    private String password;
+
+    @Comment("이름")
+    private String name;
+
+    @Enumerated(EnumType.STRING)
+    private Authority authority;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Trip> tripList;

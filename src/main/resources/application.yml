@@ -21,10 +21,11 @@ spring:
     base-url: https://maps.googleapis.com/maps/api/geocode/json?address=
     key: API_KEY
 
+jwt:
+  secret: kCXoHrvI0tyx66krErbdTIjUrylFcJQLq4IFSy0NYdNVWWSggYFRWOvuSNsswJtp
+
 server:
   address: localhost
   #  error:
   #    include-stacktrace: never
   port: 8080
-
-
