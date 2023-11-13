@@ -1,6 +1,7 @@
 package com.fastcampus.toyproject.common.exception;
 
 import static com.fastcampus.toyproject.common.exception.DefaultExceptionCode.BAD_REQUEST;
+import static com.fastcampus.toyproject.common.exception.DefaultExceptionCode.INTERNAL_SERVER_ERROR;
 
 import com.fastcampus.toyproject.common.dto.ErrorResponseDTO;
 import com.fastcampus.toyproject.common.dto.ResponseDTO;
@@ -116,7 +117,7 @@ public class DefaultExceptionHandler {
      */
 
     @ExceptionHandler(value = {
-        Exception.class
+        Exception.class, NullPointerException.class
     })
     public ResponseEntity<ErrorResponseDTO> handleException(
         Exception e, HttpServletRequest request
@@ -128,10 +129,8 @@ public class DefaultExceptionHandler {
             e.getStackTrace()
         );
 
-        ExceptionCode serverError = DefaultExceptionCode.INTERNAL_SERVER_ERROR;
-
         return new ResponseEntity<>(
-            ErrorResponseDTO.error(serverError),
+            ErrorResponseDTO.error(INTERNAL_SERVER_ERROR),
             HttpStatus.INTERNAL_SERVER_ERROR
         );
     }
