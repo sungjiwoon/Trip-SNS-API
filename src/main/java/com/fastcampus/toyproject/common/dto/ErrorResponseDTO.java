@@ -39,14 +39,5 @@ public class ErrorResponseDTO {
         );
     }
 
-    public static ErrorResponseDTO error(MethodArgumentNotValidException e) {
-        List<String> msgList = e.getAllErrors().stream()
-                .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                .collect(Collectors.toList());
-
-        return new ErrorResponseDTO(
-                BAD_REQUEST.getStatus(), BAD_REQUEST.getCode(), String.join(", ", msgList)
-        );
-    }
 
 }

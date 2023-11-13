@@ -7,8 +7,11 @@ import com.fastcampus.toyproject.common.dto.ResponseDTO;
 import com.fastcampus.toyproject.domain.itinerary.exception.ItineraryException;
 import com.fastcampus.toyproject.domain.trip.exception.TripException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -93,8 +96,14 @@ public class DefaultExceptionHandler {
                 e.getMessage()
         );
 
+        List<String> msgList = e.getAllErrors().stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.toList());
+
         return new ResponseEntity<>(
-                ErrorResponseDTO.error(e),
+                new ErrorResponseDTO(
+                        BAD_REQUEST.getStatus(), BAD_REQUEST.getCode(), String.join(", ", msgList)
+                ),
                 HttpStatus.BAD_REQUEST
         );
     }
