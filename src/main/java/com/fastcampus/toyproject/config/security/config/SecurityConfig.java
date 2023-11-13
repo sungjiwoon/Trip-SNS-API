@@ -5,9 +5,11 @@ import com.fastcampus.toyproject.config.security.jwt.JwtAuthenticationEntryPoint
 import com.fastcampus.toyproject.config.security.jwt.TokenProvider;
 import com.fastcampus.toyproject.domain.user.entity.Authority;
 import com.fastcampus.toyproject.domain.user.repository.UserRepository;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -31,6 +33,13 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHanlder jwtAccessDeniedHanlder;
 
+    private static final String[] auth = {
+        "/auth", "/auth/**"
+    };
+
+    private static final String[] getTrip = {
+        "/trip", "/trip/**"
+    };
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -53,7 +62,14 @@ public class SecurityConfig {
 
             .authorizeHttpRequests()
             .requestMatchers(
-                new AntPathRequestMatcher("/auth/**")
+                Arrays.stream(auth)
+                    .map(AntPathRequestMatcher::new)
+                    .toArray(AntPathRequestMatcher[]::new)
+            ).permitAll()
+            .requestMatchers(
+                Arrays.stream(getTrip)
+                    .map(s -> new AntPathRequestMatcher(s, "GET"))
+                    .toArray(AntPathRequestMatcher[]::new)
             ).permitAll()
             .anyRequest().authenticated()
             .and()

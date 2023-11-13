@@ -6,9 +6,12 @@ import com.fastcampus.toyproject.domain.trip.dto.TripDetailResponse;
 import com.fastcampus.toyproject.domain.trip.dto.TripRequest;
 import com.fastcampus.toyproject.domain.trip.dto.TripResponse;
 import com.fastcampus.toyproject.domain.trip.service.TripService;
+import java.security.Principal;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,14 +26,15 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/trip")
+@RequestMapping("/trip")
+@Slf4j
 public class TripController {
 
     private final TripService tripService;
 
-    @GetMapping("/all")
-    public ResponseDTO<List<TripResponse>> getAllTrips(
-    ) {
+    @GetMapping()
+    public ResponseDTO<List<TripResponse>> getAllTrips() {
+
         return ResponseDTO.ok("모든 여행 조회 완료",
             tripService.getAllTrips()
         );
