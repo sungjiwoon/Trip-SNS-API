@@ -2,12 +2,15 @@ package com.fastcampus.toyproject.domain.itinerary.service;
 
 import static org.mockito.BDDMockito.given;
 
+import com.fastcampus.toyproject.common.exception.DefaultException;
 import com.fastcampus.toyproject.domain.itinerary.dto.ItineraryRequest;
 import com.fastcampus.toyproject.domain.itinerary.dto.ItineraryResponse;
 import com.fastcampus.toyproject.domain.itinerary.exception.ItineraryException;
 import com.fastcampus.toyproject.domain.itinerary.exception.ItineraryExceptionCode;
 import com.fastcampus.toyproject.domain.itinerary.type.ItineraryType;
 import com.fastcampus.toyproject.domain.trip.entity.Trip;
+import com.fastcampus.toyproject.domain.trip.exception.TripException;
+import com.fastcampus.toyproject.domain.trip.exception.TripExceptionCode;
 import com.fastcampus.toyproject.domain.trip.repository.TripRepository;
 import com.fastcampus.toyproject.domain.user.dto.UserRequestDTO;
 import com.fastcampus.toyproject.domain.user.entity.User;
@@ -25,11 +28,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@ExtendWith(MockitoExtension.class)
 @SpringBootTest
 class ItineraryServiceTest {
-    @Mock
-    private UserRepository userRepository;
 
     @Autowired
     private TripRepository tripRepository;
@@ -56,6 +56,17 @@ class ItineraryServiceTest {
 
         for (ItineraryResponse ir : itineraryResponseList) {
             System.out.println(ir.getItineraryType() + ": " + ir.getItineraryName() + " " + ir.getItineraryOrder());
+        }
+    }
+
+    @Test
+    void 여정리스트_삽입_실패_tripId_없는경우() {
+        try {
+            List<ItineraryResponse> itineraryResponseList = itineraryService.insertItineraries(
+                    99L, itineraryRequestList
+            );
+        } catch (TripException e) {
+            Assertions.assertEquals(e.getErrorCode(), TripExceptionCode.NO_SUCH_TRIP);
         }
     }
 
