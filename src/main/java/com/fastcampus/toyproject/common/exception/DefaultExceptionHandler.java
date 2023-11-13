@@ -72,10 +72,8 @@ public class DefaultExceptionHandler {
             e.getMessage()
         );
 
-        ExceptionCode badError = BAD_REQUEST;
-
         return new ResponseEntity<>(
-            ErrorResponseDTO.error(badError),
+            ErrorResponseDTO.error(BAD_REQUEST),
             HttpStatus.BAD_REQUEST
         );
     }
@@ -103,7 +101,9 @@ public class DefaultExceptionHandler {
 
         return new ResponseEntity<>(
                 new ErrorResponseDTO(
-                        BAD_REQUEST.getStatus(), BAD_REQUEST.getCode(), String.join(", ", msgList)
+                        BAD_REQUEST.getStatus(),
+                        BAD_REQUEST.getCode(),
+                        String.join(", ", msgList)
                 ),
                 HttpStatus.BAD_REQUEST
         );
