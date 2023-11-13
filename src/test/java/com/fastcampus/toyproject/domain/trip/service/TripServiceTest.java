@@ -40,16 +40,16 @@ class TripServiceTest {
 
     LocalDateTime now = LocalDateTime.now();
 
-    @BeforeEach
-    void setUp() {
+//    @BeforeEach
+//    void setUp() {
 //        User saveUser = userRepository.save(user);
 //        userId = saveUser.getUserId();
-        itineraryRequestList.add(ir1);
-        itineraryRequestList.add(ir2);
-        itineraryRequestList.add(ir3);
-    }
-    @Test
-    void 여행_삭제_성공() {
+//        itineraryRequestList.add(ir1);
+//        itineraryRequestList.add(ir2);
+//        itineraryRequestList.add(ir3);
+//    }
+//    @Test
+//    void 여행_삭제_성공() {
 //        Trip ti = tripRepository.save(trip);
 //        itineraryService.insertItineraries(ti.getTripId(), itineraryRequestList);
 //        tripService.deleteTrip(ti.getTripId());
@@ -58,7 +58,7 @@ class TripServiceTest {
 //        for (Itinerary it : saveTrip.get().getItineraryList()) {
 //            Assertions.assertNotEquals(it.getBaseTimeEntity().getDeletedAt(), null);
 //        }
-    }
+//    }
 
     User user = User.builder()
             .email("test@mail.com")
