@@ -177,7 +177,7 @@ public class ItineraryService {
             if (it.getTrip().getTripId() != tripId) {
                 throw new ItineraryException(NO_ITINERARY);
             }
-            if (it.getBaseTimeEntity().getDeletedAt() == null) {
+            if (it.getBaseTimeEntity().getDeletedAt() != null) {
                 throw new ItineraryException(ITINERARY_ALREADY_DELETED);
             }
         }
