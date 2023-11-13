@@ -30,10 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class TripService {
 
     private final TripRepository tripRepository;
-    private final UserRepository userRepository;
-    private final ItineraryService itineraryService;
     private final UserService userService;
-
 
     /**
      * trip 아이디를 통한 trip 객체 반환하는 메소드
@@ -58,19 +55,19 @@ public class TripService {
 
         return trip;
     }
-
-    /**
-     * trip 객체로 연관된 itinerary들의 이름만 반환하는 메소드
-     *
-     * @param trip
-     * @return string
-     */
-    public String getItineraryNamesByTrip(Trip trip) {
-        return itineraryService.getItineraryResponseListByTrip(trip)
-            .stream()
-            .map(it -> it.getItineraryName())
-            .collect(Collectors.joining(", "));
-    }
+//
+//    /**
+//     * trip 객체로 연관된 itinerary들의 이름만 반환하는 메소드
+//     *
+//     * @param trip
+//     * @return string
+//     */
+//    public String getItineraryNamesByTrip(Trip trip) {
+//        return itineraryService.getItineraryResponseListByTrip(trip)
+//            .stream()
+//            .map(it -> it.getItineraryName())
+//            .collect(Collectors.joining(", "));
+//    }
 
     /**
      * 삭제 되지 않은 trip 전부를 반환하는 메소드
@@ -152,7 +149,6 @@ public class TripService {
     public TripResponse deleteTrip(Long tripId) {
         Trip trip = getTripByTripId(tripId);
         trip.delete();
-        itineraryService.deleteAllItineraryByTrip(trip);
         return TripResponse.fromEntity(tripRepository.save(trip));
     }
 

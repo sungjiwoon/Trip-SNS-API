@@ -87,6 +87,9 @@ public class Trip {
 
     public void delete() {
         baseTimeEntity.delete(LocalDateTime.now());
+        for (Itinerary it : this.itineraryList) {
+            it.delete();
+        }
     }
 
     public void updateFromDTO(TripRequest tripDTO) {
