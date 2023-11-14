@@ -67,11 +67,11 @@ public class SecurityConfig {
                     .map(AntPathRequestMatcher::new)
                     .toArray(AntPathRequestMatcher[]::new)
             ).permitAll()
-//            .requestMatchers(
-//                Arrays.stream(getTrip)
-//                    .map(s -> new AntPathRequestMatcher(s, "GET"))
-//                    .toArray(AntPathRequestMatcher[]::new)
-//            ).permitAll()
+            .requestMatchers(
+                Arrays.stream(getTrip)
+                    .map(s -> new AntPathRequestMatcher(s, "GET"))
+                    .toArray(AntPathRequestMatcher[]::new)
+            ).permitAll()
             .anyRequest().authenticated()
             .and()
 
