@@ -129,6 +129,9 @@ public class DefaultExceptionHandler {
             e.getStackTrace()
         );
 
+        //개발중 예외처리 되지 않은 익셉션을 더 확실히 확인 할 수 있도록 스택트레이스 출력 
+        e.printStackTrace();
+
         return new ResponseEntity<>(
             ErrorResponseDTO.error(INTERNAL_SERVER_ERROR),
             HttpStatus.INTERNAL_SERVER_ERROR
