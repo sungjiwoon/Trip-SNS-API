@@ -33,7 +33,7 @@ public class UserPrincipal extends AbstractAuthenticationToken {
         this.email = user.getEmail();
         this.name = user.getName();
         this.authority = user.getAuthority();
-        setAuthenticated(false);
+        setAuthenticated(true);
     }
 
     public UserPrincipal(Claims claims, Collection<? extends GrantedAuthority> authorities){
@@ -41,7 +41,7 @@ public class UserPrincipal extends AbstractAuthenticationToken {
         this.userId = ((Number) claims.get("userId")).longValue();
         this.email = String.valueOf(claims.get("email"));
         this.name = String.valueOf(claims.get("name"));
-        setAuthenticated(false);
+        setAuthenticated(true);
     }
 
     @Override
