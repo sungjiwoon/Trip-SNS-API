@@ -2,6 +2,7 @@ package com.fastcampus.toyproject.domain.trip.controller;
 
 import com.fastcampus.toyproject.common.dto.ResponseDTO;
 import com.fastcampus.toyproject.common.util.DateUtil;
+import com.fastcampus.toyproject.config.security.jwt.UserPrincipal;
 import com.fastcampus.toyproject.domain.trip.dto.TripDetailResponse;
 import com.fastcampus.toyproject.domain.trip.dto.TripRequest;
 import com.fastcampus.toyproject.domain.trip.dto.TripResponse;
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.constraints.Range;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,7 +51,7 @@ public class TripController {
 
     @GetMapping("/{tripId}")
     public ResponseDTO<TripDetailResponse> getTripDetail(
-        @PathVariable Long tripId
+        @PathVariable final Long tripId
     ) {
         return ResponseDTO.ok("상세 여행 조회 완료",
             tripService.getTripDetail(tripId)
@@ -58,9 +60,10 @@ public class TripController {
 
     @GetMapping("/search")
     public ResponseDTO<List<TripResponse>> searchTripListByKeyword(
+            @Valid @RequestParam("keyword")
             @NotBlank(message = "검색어를 채워주세요")
             @Range(min = 1, max = 10, message = "검색어는 한 글자 이상이어야 합니다.")
-            @RequestParam("keyword") String keyword
+            final String keyword
     ) {
         System.out.println("keyword : " + keyword);
         Optional<List<TripResponse>> optional = tripService.getTripByKeyword(keyword);
@@ -74,7 +77,7 @@ public class TripController {
 
     @PostMapping()
     public ResponseDTO<TripResponse> insertTrip(
-        Authentication authentication,
+        final UserPrincipal userPrincipal,
         @Valid @RequestBody final TripRequest tripRequest
     ) {
         DateUtil.isStartDateEarlierThanEndDate(
@@ -85,14 +88,14 @@ public class TripController {
         //User user = (User) authentication.getPrincipal();
         //log.info("TripController:: user name : {} ", user.getName());
         return ResponseDTO.ok("여행 삽입 완료",
-            tripService.insertTrip(1L, tripRequest)
+            tripService.insertTrip(userPrincipal.getUserId(), tripRequest)
         );
     }
 
     @PutMapping("/{tripId}")
     public ResponseDTO<TripResponse> updateTrip(
-        @PathVariable final Long memberId,
         @PathVariable final Long tripId,
+        final UserPrincipal userPrincipal,
         @Valid @RequestBody final TripRequest tripRequest
     ) {
         DateUtil.isStartDateEarlierThanEndDate(
@@ -100,16 +103,17 @@ public class TripController {
             tripRequest.getEndDate()
         );
         return ResponseDTO.ok("여행 수정 완료",
-            tripService.updateTrip(memberId, tripId, tripRequest)
+            tripService.updateTrip(userPrincipal.getUserId(), tripId, tripRequest)
         );
     }
 
     @DeleteMapping("/{tripId}")
     public ResponseDTO<TripResponse> deleteTrip(
-        @PathVariable final Long tripId
+        @PathVariable final Long tripId,
+        final UserPrincipal userPrincipal
     ) {
         return ResponseDTO.ok("여행 삭제 완료",
-            tripService.deleteTrip(tripId)
+            tripService.deleteTrip(userPrincipal.getUserId(), tripId)
         );
     }
 }

@@ -45,6 +45,10 @@ public class TripService {
             .findById(tripId)
             .orElseThrow(() -> new TripException(NO_SUCH_TRIP));
 
+        if (trip.getBaseTimeEntity().getDeletedAt() != null) {
+            throw new TripException(TRIP_ALREADY_DELETED);
+        }
+
         List<Itinerary> list = trip.getItineraryList();
 
         for (int i = 0; i < list.size(); i++) {
@@ -56,19 +60,17 @@ public class TripService {
 
         return trip;
     }
-//
-//    /**
-//     * trip 객체로 연관된 itinerary들의 이름만 반환하는 메소드
-//     *
-//     * @param trip
-//     * @return string
-//     */
-//    public String getItineraryNamesByTrip(Trip trip) {
-//        return itineraryService.getItineraryResponseListByTrip(trip)
-//            .stream()
-//            .map(it -> it.getItineraryName())
-//            .collect(Collectors.joining(", "));
-//    }
+
+    /**
+     * trip 과 userId가 맞는지 검증
+     * @param userId
+     * @param trip
+     */
+    private static void isMatchUserAndTrip(Long userId, Trip trip) {
+        if (trip.getUser().getUserId() != userId) {
+            throw new TripException(NOT_MATCH_BETWEEN_USER_AND_TRIP);
+        }
+    }
 
     /**
      * 삭제 되지 않은 trip 전부를 반환하는 메소드
@@ -78,12 +80,11 @@ public class TripService {
     @Transactional(readOnly = true)
     public List<TripResponse> getAllTrips() {
         return tripRepository.findAll()
-            .stream().filter(trip -> {
-                    System.out.println("하이");
-                return trip.getBaseTimeEntity().getDeletedAt() == null;
-            })
-            .map(TripResponse::fromEntity).
-            collect(Collectors.toList());
+            .stream().filter(trip ->
+                trip.getBaseTimeEntity().getDeletedAt() == null
+            )
+            .map(TripResponse::fromEntity)
+            .collect(Collectors.toList());
     }
 
     /**
@@ -95,9 +96,6 @@ public class TripService {
     @Transactional(readOnly = true)
     public TripDetailResponse getTripDetail(Long tripId) {
         Trip trip = getTripByTripId(tripId);
-        if (trip.getBaseTimeEntity().getDeletedAt() != null) {
-            throw new TripException(TRIP_ALREADY_DELETED);
-        }
         return TripDetailResponse.fromEntity(trip);
     }
 
@@ -110,7 +108,6 @@ public class TripService {
      */
     @Transactional
     public TripResponse insertTrip(Long userId, TripRequest tripRequest) {
-
         Trip trip = Trip.builder()
             .user(userService.getUser(userId))
             .tripName(tripRequest.getTripName())
@@ -130,17 +127,14 @@ public class TripService {
     /**
      * trip 수정하는 메소드
      *
-     * @param memberId
+     * @param userId
      * @param tripId
      * @param tripRequest
      * @return tripResponseDTO
      */
-    public TripResponse updateTrip(Long memberId, Long tripId, TripRequest tripRequest) {
+    public TripResponse updateTrip(Long userId, Long tripId, TripRequest tripRequest) {
         Trip existTrip = getTripByTripId(tripId);
-
-        if (!existTrip.getUser().getUserId().equals(memberId)) {
-            throw new TripException(NOT_MATCH_BETWEEN_USER_AND_TRIP);
-        }
+        isMatchUserAndTrip(userId, existTrip);
 
         existTrip.updateFromDTO(tripRequest);
         return TripResponse.fromEntity(tripRepository.save(existTrip));
@@ -151,10 +145,12 @@ public class TripService {
      *
      * @param tripId
      */
-    public TripResponse deleteTrip(Long tripId) {
-        Trip trip = getTripByTripId(tripId);
-        trip.delete();
-        return TripResponse.fromEntity(tripRepository.save(trip));
+    public TripResponse deleteTrip(Long userId, Long tripId) {
+        Trip existTrip = getTripByTripId(tripId);
+        isMatchUserAndTrip(userId, existTrip);
+
+        existTrip.delete();
+        return TripResponse.fromEntity(tripRepository.save(existTrip));
     }
 
     /**
@@ -169,7 +165,7 @@ public class TripService {
 
         List<TripResponse> tripResponseList = new ArrayList<>();
         for (Trip trip : optionalTrips.get()) {
-            System.out.println("search: " + trip.getTripName());
+            if (trip.getBaseTimeEntity().getDeletedAt() != null) continue;
             tripResponseList.add(TripResponse.fromEntity(trip));
         }
         return Optional.ofNullable(tripResponseList);

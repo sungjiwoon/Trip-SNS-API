@@ -23,6 +23,7 @@ import lombok.NoArgsConstructor;
 public class TripDetailResponse {
 
     private Long tripId;
+    private Long userId;
     private String tripName;
     private LocalDate startDate;
     private LocalDate endDate;
@@ -32,6 +33,7 @@ public class TripDetailResponse {
     public static TripDetailResponse fromEntity(Trip trip) {
         return TripDetailResponse.builder()
             .tripId(trip.getTripId())
+            .userId(trip.getUser().getUserId())
             .tripName(trip.getTripName())
             .startDate(trip.getStartDate())
             .endDate(trip.getEndDate())
