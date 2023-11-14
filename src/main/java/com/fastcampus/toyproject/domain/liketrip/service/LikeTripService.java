@@ -1,5 +1,7 @@
 package com.fastcampus.toyproject.domain.liketrip.service;
 
+import com.fastcampus.toyproject.domain.liketrip.dto.LikeTripRequest;
+import com.fastcampus.toyproject.domain.liketrip.dto.LikeTripResponse;
 import com.fastcampus.toyproject.domain.liketrip.entity.LikeTrip;
 import com.fastcampus.toyproject.domain.liketrip.repository.LikeTripRepository;
 import com.fastcampus.toyproject.domain.trip.entity.Trip;
@@ -14,20 +16,30 @@ public class LikeTripService {
     private final LikeTripRepository likeTripRepository;
     private final TripRepository tripRepository;
     private final UserService userService;
-
-    public LikeTrip toggleLike(Long userId, Long tripId) {
+    public LikeTripResponse toggleLike(Long userId, LikeTripRequest request) {
         User user = userService.getUser(userId);
-        Trip trip = tripRepository.findById(tripId)
+        Trip trip = tripRepository.findById(request.getTripId())
             .orElseThrow(() -> new RuntimeException("Trip not found"));
 
-        return likeTripRepository.findByUserUserIdAndTripTripId(userId, tripId)
-            .map(likeTrip -> {
-                likeTrip.setIsLike(!likeTrip.getIsLike());
-                return likeTripRepository.save(likeTrip);
+        LikeTrip likeTrip = likeTripRepository.findByUserUserIdAndTripTripId(userId, request.getTripId())
+            .map(like -> {
+                // 현재 상태 반전
+                like.setIsLike(!like.getIsLike());
+                return likeTripRepository.save(like);
             })
             .orElseGet(() -> {
-                LikeTrip newLike = new LikeTrip(user, trip, true);
-                return likeTripRepository.save(newLike);
+
+                return likeTripRepository.save(new LikeTrip(user, trip, true));
             });
+
+        return convertToResponse(likeTrip);
+    }
+
+    private LikeTripResponse convertToResponse(LikeTrip likeTrip) {
+        LikeTripResponse response = new LikeTripResponse();
+        response.setLikeTripId(likeTrip.getLikeTripId());
+        response.setTripId(likeTrip.getTrip().getTripId());
+        response.setIsLike(likeTrip.getIsLike());
+        return response;
     }
 }
