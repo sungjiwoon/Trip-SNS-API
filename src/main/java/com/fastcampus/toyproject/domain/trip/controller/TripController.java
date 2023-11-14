@@ -57,9 +57,9 @@ public class TripController {
 
     @GetMapping("/search")
     public ResponseDTO<List<TripResponse>> searchTripListByKeyword(
-            @NotBlank(message = "검색어를 채워주세요")
-            @Range(min = 1, max = 10, message = "검색어는 한 글자 이상이어야 합니다.")
-            @RequestParam("keyword") String keyword
+        @NotBlank(message = "검색어를 채워주세요")
+        @Range(min = 1, max = 10, message = "검색어는 한 글자 이상이어야 합니다.")
+        @RequestParam("keyword") String keyword
     ) {
         System.out.println("keyword : " + keyword);
         Optional<List<TripResponse>> optional = tripService.getTripByKeyword(keyword);
@@ -108,11 +108,14 @@ public class TripController {
 
 
     @DeleteMapping("/{tripId}")
-    public ResponseDTO<TripResponse> deleteTrip(
+    public ResponseDTO<Void> deleteTrip(
+        UserPrincipal userPrincipal,
         @PathVariable final Long tripId
     ) {
-        return ResponseDTO.ok("여행 삭제 완료",
-            tripService.deleteTrip(tripId)
-        );
+        Long userId = userPrincipal.getUserId();
+        log.info("TripController:: user ID : {} ", userId);
+        tripService.deleteTrip(tripId);
+        return ResponseDTO.ok("여행 삭제 완료");
     }
+
 }
