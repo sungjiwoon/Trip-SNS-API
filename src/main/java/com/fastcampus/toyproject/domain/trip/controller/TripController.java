@@ -7,18 +7,14 @@ import com.fastcampus.toyproject.domain.trip.dto.TripDetailResponse;
 import com.fastcampus.toyproject.domain.trip.dto.TripRequest;
 import com.fastcampus.toyproject.domain.trip.dto.TripResponse;
 import com.fastcampus.toyproject.domain.trip.service.TripService;
-import com.fastcampus.toyproject.domain.user.entity.User;
-import java.security.Principal;
+
 import java.util.List;
 import java.util.Optional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.constraints.Range;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -60,10 +56,12 @@ public class TripController {
 
     @GetMapping("/search")
     public ResponseDTO<List<TripResponse>> searchTripListByKeyword(
+
             @Valid @RequestParam("keyword")
             @NotBlank(message = "검색어를 채워주세요")
             @Range(min = 1, max = 10, message = "검색어는 한 글자 이상이어야 합니다.")
             final String keyword
+
     ) {
         System.out.println("keyword : " + keyword);
         Optional<List<TripResponse>> optional = tripService.getTripByKeyword(keyword);
@@ -77,7 +75,9 @@ public class TripController {
 
     @PostMapping()
     public ResponseDTO<TripResponse> insertTrip(
-        final UserPrincipal userPrincipal,
+
+        UserPrincipal userPrincipal,
+
         @Valid @RequestBody final TripRequest tripRequest
     ) {
         DateUtil.isStartDateEarlierThanEndDate(
@@ -85,15 +85,18 @@ public class TripController {
             tripRequest.getEndDate()
         );
 
-        //User user = (User) authentication.getPrincipal();
-        //log.info("TripController:: user name : {} ", user.getName());
+        Long userId = userPrincipal.getUserId();
+        log.info("TripController:: user ID : {} ", userPrincipal.getUserId());
         return ResponseDTO.ok("여행 삽입 완료",
-            tripService.insertTrip(userPrincipal.getUserId(), tripRequest)
+
+            tripService.insertTrip(userId, tripRequest)
+
         );
     }
 
     @PutMapping("/{tripId}")
     public ResponseDTO<TripResponse> updateTrip(
+
         @PathVariable final Long tripId,
         final UserPrincipal userPrincipal,
         @Valid @RequestBody final TripRequest tripRequest
@@ -102,18 +105,30 @@ public class TripController {
             tripRequest.getStartDate(),
             tripRequest.getEndDate()
         );
+
+        Long userId = userPrincipal.getUserId();
+        log.info("TripController:: user ID : {} ", userId);
         return ResponseDTO.ok("여행 수정 완료",
-            tripService.updateTrip(userPrincipal.getUserId(), tripId, tripRequest)
+
+            tripService.updateTrip(userId, tripId, tripRequest)
+
+        
+
         );
     }
 
+
     @DeleteMapping("/{tripId}")
-    public ResponseDTO<TripResponse> deleteTrip(
-        @PathVariable final Long tripId,
-        final UserPrincipal userPrincipal
+
+    public ResponseDTO<Void> deleteTrip(
+        UserPrincipal userPrincipal,
+        @PathVariable final Long tripId
     ) {
-        return ResponseDTO.ok("여행 삭제 완료",
-            tripService.deleteTrip(userPrincipal.getUserId(), tripId)
-        );
+        Long userId = userPrincipal.getUserId();
+        log.info("TripController:: user ID : {} ", userId);
+        tripService.deleteTrip(tripId);
+        return ResponseDTO.ok("여행 삭제 완료");
+
     }
+
 }
