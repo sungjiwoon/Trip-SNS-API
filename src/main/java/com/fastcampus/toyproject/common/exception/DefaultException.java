@@ -10,13 +10,13 @@ public class DefaultException extends RuntimeException {
     ExceptionCode errorCode;
     String errorMsg;
 
-    public DefaultException(DefaultExceptionCode errorCode, String errorMsg) {
+    public DefaultException(ExceptionCode errorCode, String errorMsg) {
         super(errorCode.getMsg());
         this.errorCode = errorCode;
         this.errorMsg = errorMsg;
     }
 
-    public DefaultException(DefaultExceptionCode errorCode) {
+    public DefaultException(ExceptionCode errorCode) {
         super(errorCode.getMsg());
         this.errorCode = errorCode;
         this.errorMsg = errorCode.getMsg();

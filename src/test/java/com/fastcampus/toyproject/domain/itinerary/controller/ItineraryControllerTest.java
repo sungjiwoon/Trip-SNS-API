@@ -63,7 +63,7 @@ public class ItineraryControllerTest {
     public void insertItineraryTest() throws Exception {
 
         given(itineraryService.insertItineraries(
-            anyLong(), any()
+            anyLong(), anyLong(), any()
         )).willReturn(
             null
         );
@@ -80,7 +80,7 @@ public class ItineraryControllerTest {
     public void updateItineraryTest() throws Exception {
 
         given(itineraryService.updateItineraries(
-            anyLong(), any()
+            anyLong(), anyLong(), any()
         )).willReturn(
             null
         );
@@ -97,7 +97,7 @@ public class ItineraryControllerTest {
 
         List<Long> deleteList = List.of(1L, 2L);
 
-        given(itineraryService.deleteItineraries(anyLong(), any()))
+        given(itineraryService.deleteItineraries(anyLong(), anyLong(), any()))
             .willReturn(null);
 
         mockMvc.perform(put("/api/member/1/trip-itineraries/delete/2")

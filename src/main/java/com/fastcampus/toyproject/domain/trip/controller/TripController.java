@@ -15,7 +15,6 @@ import javax.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.constraints.Range;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,7 +47,7 @@ public class TripController {
 
     @GetMapping("/{tripId}")
     public ResponseDTO<TripDetailResponse> getTripDetail(
-        @PathVariable Long tripId
+        @PathVariable final Long tripId
     ) {
         return ResponseDTO.ok("상세 여행 조회 완료",
             tripService.getTripDetail(tripId)
@@ -57,9 +56,12 @@ public class TripController {
 
     @GetMapping("/search")
     public ResponseDTO<List<TripResponse>> searchTripListByKeyword(
-        @NotBlank(message = "검색어를 채워주세요")
-        @Range(min = 1, max = 10, message = "검색어는 한 글자 이상이어야 합니다.")
-        @RequestParam("keyword") String keyword
+
+            @Valid @RequestParam("keyword")
+            @NotBlank(message = "검색어를 채워주세요")
+            @Range(min = 1, max = 10, message = "검색어는 한 글자 이상이어야 합니다.")
+            final String keyword
+
     ) {
         System.out.println("keyword : " + keyword);
         Optional<List<TripResponse>> optional = tripService.getTripByKeyword(keyword);
@@ -73,7 +75,9 @@ public class TripController {
 
     @PostMapping()
     public ResponseDTO<TripResponse> insertTrip(
+
         UserPrincipal userPrincipal,
+
         @Valid @RequestBody final TripRequest tripRequest
     ) {
         DateUtil.isStartDateEarlierThanEndDate(
@@ -84,14 +88,17 @@ public class TripController {
         Long userId = userPrincipal.getUserId();
         log.info("TripController:: user ID : {} ", userPrincipal.getUserId());
         return ResponseDTO.ok("여행 삽입 완료",
+
             tripService.insertTrip(userId, tripRequest)
+
         );
     }
 
     @PutMapping("/{tripId}")
     public ResponseDTO<TripResponse> updateTrip(
-        UserPrincipal userPrincipal,
+
         @PathVariable final Long tripId,
+        final UserPrincipal userPrincipal,
         @Valid @RequestBody final TripRequest tripRequest
     ) {
         DateUtil.isStartDateEarlierThanEndDate(
@@ -102,12 +109,17 @@ public class TripController {
         Long userId = userPrincipal.getUserId();
         log.info("TripController:: user ID : {} ", userId);
         return ResponseDTO.ok("여행 수정 완료",
+
             tripService.updateTrip(userId, tripId, tripRequest)
+
+        
+
         );
     }
 
 
     @DeleteMapping("/{tripId}")
+
     public ResponseDTO<Void> deleteTrip(
         UserPrincipal userPrincipal,
         @PathVariable final Long tripId
@@ -116,6 +128,7 @@ public class TripController {
         log.info("TripController:: user ID : {} ", userId);
         tripService.deleteTrip(tripId);
         return ResponseDTO.ok("여행 삭제 완료");
+
     }
 
 }
