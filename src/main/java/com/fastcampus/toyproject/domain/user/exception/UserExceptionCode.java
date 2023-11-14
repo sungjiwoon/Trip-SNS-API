@@ -9,9 +9,9 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum UserExceptionCode implements ExceptionCode {
 
-    EXSITED_EMAIL(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR", "중복 된 이메일이 있습니다."),
-    WRONG_PASSWORD(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR", "잘 못 된 비밀번호 입니다."),
-    NO_SUCH_EMAIL(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR", "존재 하지 않는 이메일 입니다.")
+    EXSITED_EMAIL(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED", "중복 된 이메일이 있습니다."),
+    WRONG_PASSWORD(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED", "잘 못 된 비밀번호 입니다."),
+    NO_SUCH_EMAIL(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED", "존재 하지 않는 이메일 입니다.")
 
     ;
 
