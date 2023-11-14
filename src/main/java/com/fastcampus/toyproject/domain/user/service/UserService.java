@@ -1,6 +1,9 @@
 package com.fastcampus.toyproject.domain.user.service;
 
-import com.fastcampus.toyproject.common.BaseTimeEntity;
+import static com.fastcampus.toyproject.domain.user.exception.UserExceptionCode.EXSITED_EMAIL;
+import static com.fastcampus.toyproject.domain.user.exception.UserExceptionCode.NO_SUCH_EMAIL;
+import static com.fastcampus.toyproject.domain.user.exception.UserExceptionCode.WRONG_PASSWORD;
+
 import com.fastcampus.toyproject.config.security.jwt.TokenProvider;
 import com.fastcampus.toyproject.config.security.jwt.UserPrincipal;
 import com.fastcampus.toyproject.domain.user.dto.LoginDto;
@@ -9,22 +12,13 @@ import com.fastcampus.toyproject.domain.user.dto.TokenDto;
 import com.fastcampus.toyproject.domain.user.dto.TokenRequestDto;
 import com.fastcampus.toyproject.domain.user.dto.UserRequestDTO;
 import com.fastcampus.toyproject.domain.user.dto.UserResponseDTO;
-import com.fastcampus.toyproject.domain.user.entity.Authority;
 import com.fastcampus.toyproject.domain.user.entity.User;
-import com.fastcampus.toyproject.domain.user.exception.ExistEmailExcpetion;
-import com.fastcampus.toyproject.domain.user.exception.UserEmailNotFoundException;
+import com.fastcampus.toyproject.domain.user.exception.UserException;
+import com.fastcampus.toyproject.domain.user.exception.UserExceptionCode;
 import com.fastcampus.toyproject.domain.user.repository.RefreshTokenRepository;
 import com.fastcampus.toyproject.domain.user.repository.UserRepository;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.AllArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,7 +36,7 @@ public class UserService {
     public UserResponseDTO insertUser(UserRequestDTO userRequestDTO) {
 
         if(userRepository.existsByEmail(userRequestDTO.getEmail())){
-            throw new ExistEmailExcpetion("존재하는 사용자 이메일");
+            throw new UserException(EXSITED_EMAIL);
         }
 
         User user = userRequestDTO.toUser(passwordEncoder);
@@ -57,11 +51,11 @@ public class UserService {
     public TokenDto login(LoginDto loginDto) {
 
         User user = userRepository.findByEmail(loginDto.getEmail())
-            .orElseThrow(() -> new RuntimeException("사용자가 없습니다."));
+            .orElseThrow(() -> new UserException(NO_SUCH_EMAIL));
 
-//        if(passwordEncoder.matches(loginDto.getPassword(), user.getPassword())){
-//            throw new RuntimeException("비밀번호가 틀립니다.");
-//        }
+        if(!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())){
+            throw new UserException(WRONG_PASSWORD);
+        }
 
         UserPrincipal authentication = new UserPrincipal(user);
 
