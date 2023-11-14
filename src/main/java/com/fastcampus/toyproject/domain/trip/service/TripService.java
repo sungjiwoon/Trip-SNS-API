@@ -3,6 +3,7 @@ package com.fastcampus.toyproject.domain.trip.service;
 
 import static com.fastcampus.toyproject.domain.trip.exception.TripExceptionCode.NOT_MATCH_BETWEEN_USER_AND_TRIP;
 import static com.fastcampus.toyproject.domain.trip.exception.TripExceptionCode.NO_SUCH_TRIP;
+import static com.fastcampus.toyproject.domain.trip.exception.TripExceptionCode.TRIP_ALREADY_DELETED;
 
 import com.fastcampus.toyproject.common.BaseTimeEntity;
 import com.fastcampus.toyproject.common.exception.DefaultException;
@@ -17,7 +18,9 @@ import com.fastcampus.toyproject.domain.trip.exception.TripException;
 import com.fastcampus.toyproject.domain.trip.repository.TripRepository;
 import com.fastcampus.toyproject.domain.user.repository.UserRepository;
 import com.fastcampus.toyproject.domain.user.service.UserService;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,10 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class TripService {
 
     private final TripRepository tripRepository;
-    private final UserRepository userRepository;
-    private final ItineraryService itineraryService;
     private final UserService userService;
-
 
     /**
      * trip 아이디를 통한 trip 객체 반환하는 메소드
@@ -56,19 +56,19 @@ public class TripService {
 
         return trip;
     }
-
-    /**
-     * trip 객체로 연관된 itinerary들의 이름만 반환하는 메소드
-     *
-     * @param trip
-     * @return string
-     */
-    public String getItineraryNamesByTrip(Trip trip) {
-        return itineraryService.getItineraryResponseListByTrip(trip)
-            .stream()
-            .map(it -> it.getItineraryName())
-            .collect(Collectors.joining(", "));
-    }
+//
+//    /**
+//     * trip 객체로 연관된 itinerary들의 이름만 반환하는 메소드
+//     *
+//     * @param trip
+//     * @return string
+//     */
+//    public String getItineraryNamesByTrip(Trip trip) {
+//        return itineraryService.getItineraryResponseListByTrip(trip)
+//            .stream()
+//            .map(it -> it.getItineraryName())
+//            .collect(Collectors.joining(", "));
+//    }
 
     /**
      * 삭제 되지 않은 trip 전부를 반환하는 메소드
@@ -94,7 +94,11 @@ public class TripService {
      */
     @Transactional(readOnly = true)
     public TripDetailResponse getTripDetail(Long tripId) {
-        return TripDetailResponse.fromEntity(getTripByTripId(tripId));
+        Trip trip = getTripByTripId(tripId);
+        if (trip.getBaseTimeEntity().getDeletedAt() != null) {
+            throw new TripException(TRIP_ALREADY_DELETED);
+        }
+        return TripDetailResponse.fromEntity(trip);
     }
 
     /**
@@ -118,10 +122,8 @@ public class TripService {
 
         Trip saveTrip = tripRepository.save(trip);
         if (saveTrip != null) {
-            //System.out.println("hi:" + trip.getBaseTimeEntity().getCreatedAt());
-            TripResponse.fromEntity(trip);
+            return TripResponse.fromEntity(trip);
         }
-
         return null;
     }
 
@@ -152,7 +154,24 @@ public class TripService {
     public TripResponse deleteTrip(Long tripId) {
         Trip trip = getTripByTripId(tripId);
         trip.delete();
-        itineraryService.deleteAllItineraryByTrip(trip);
         return TripResponse.fromEntity(tripRepository.save(trip));
+    }
+
+    /**
+     * keyword 검색을 통한 여행 이름 리스트 출력
+     * @param keyword
+     * @return List<TripResponse>
+     */
+    @Transactional(readOnly = true)
+    public Optional<List<TripResponse>> getTripByKeyword(String keyword) {
+        Optional<List<Trip>> optionalTrips = tripRepository
+                .findByTripNameContains(keyword);
+
+        List<TripResponse> tripResponseList = new ArrayList<>();
+        for (Trip trip : optionalTrips.get()) {
+            System.out.println("search: " + trip.getTripName());
+            tripResponseList.add(TripResponse.fromEntity(trip));
+        }
+        return Optional.ofNullable(tripResponseList);
     }
 }

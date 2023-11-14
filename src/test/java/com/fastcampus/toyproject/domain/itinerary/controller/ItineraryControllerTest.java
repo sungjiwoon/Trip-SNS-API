@@ -49,7 +49,7 @@ public class ItineraryControllerTest {
         reqList = List.of(ItineraryUpdateRequest.builder()
             .itineraryId(2L)
             .type(ItineraryType.MOVEMENT)
-            .item("로켓")
+            .name("로켓")
             .startDate(LocalDateTime.now())
             .endDate(LocalDateTime.now())
             .order(3)

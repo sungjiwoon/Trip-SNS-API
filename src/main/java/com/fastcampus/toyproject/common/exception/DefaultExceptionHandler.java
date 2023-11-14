@@ -33,7 +33,8 @@ public class DefaultExceptionHandler {
      * @return
      */
     @ExceptionHandler(value = {
-        DefaultException.class
+        DefaultException.class,
+        SecurityException.class
     })
     public ResponseEntity<ErrorResponseDTO> handleDefaultException(
         DefaultException e,

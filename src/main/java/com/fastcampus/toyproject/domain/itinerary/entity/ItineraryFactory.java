@@ -1,7 +1,13 @@
 package com.fastcampus.toyproject.domain.itinerary.entity;
 
+import static com.fastcampus.toyproject.domain.itinerary.exception.ItineraryExceptionCode.EMPTY_ARRIVAL_PLACE;
+import static com.fastcampus.toyproject.domain.itinerary.exception.ItineraryExceptionCode.EMPTY_DEPARTURE_PLACE;
+import static com.fastcampus.toyproject.domain.itinerary.exception.ItineraryExceptionCode.EMPTY_TRANSPORTATION;
+
 import com.fastcampus.toyproject.common.BaseTimeEntity;
 import com.fastcampus.toyproject.domain.itinerary.dto.ItineraryRequest;
+import com.fastcampus.toyproject.domain.itinerary.exception.ItineraryException;
+import com.fastcampus.toyproject.domain.itinerary.exception.ItineraryExceptionCode;
 import com.fastcampus.toyproject.domain.itinerary.type.ItineraryType;
 import com.fastcampus.toyproject.domain.trip.entity.Trip;
 import java.util.HashMap;
@@ -17,25 +23,26 @@ public class ItineraryFactory {
         ItineraryRequest, Itinerary>> map = new HashMap<>();
 
     static {
-        map.put(ItineraryType.MOVEMENT, (trip, ir) ->
-            Movement.builder()
-                .trip(trip)
-                .itineraryName(ir.getMovementName())
-                .itineraryOrder(ir.getOrder())
-                .itineraryType(ir.getType())
-                .departureDate(ir.getStartDate())
-                .arrivalDate(ir.getEndDate())
-                .departurePlace(ir.getDeparturePlace())
-                .arrivalPlace(ir.getArrivalPlace())
-                .transportation(ir.getItem())
-                .baseTimeEntity(new BaseTimeEntity())
-                .build()
+        map.put(ItineraryType.MOVEMENT, (trip, ir) -> {
+            isValidMovement(ir);
+            return Movement.builder()
+                    .trip(trip)
+                    .itineraryName(ir.getName())
+                    .itineraryOrder(ir.getOrder())
+                    .itineraryType(ir.getType())
+                    .departureDate(ir.getStartDate())
+                    .arrivalDate(ir.getEndDate())
+                    .departurePlace(ir.getDeparturePlace())
+                    .arrivalPlace(ir.getArrivalPlace())
+                    .baseTimeEntity(new BaseTimeEntity())
+                    .build();
+            }
         );
 
         map.put(ItineraryType.LODGEMENT, (trip, ir) ->
             Lodgement.builder()
                 .trip(trip)
-                .itineraryName(ir.getItem())
+                .itineraryName(ir.getName())
                 .itineraryOrder(ir.getOrder())
                 .itineraryType(ir.getType())
                 .checkIn(ir.getStartDate())
@@ -47,7 +54,7 @@ public class ItineraryFactory {
         map.put(ItineraryType.STAY, (trip, ir) ->
             Stay.builder()
                 .trip(trip)
-                .itineraryName(ir.getItem())
+                .itineraryName(ir.getName())
                 .itineraryOrder(ir.getOrder())
                 .itineraryType(ir.getType())
                 .departureDate(ir.getStartDate())
@@ -55,6 +62,15 @@ public class ItineraryFactory {
                 .baseTimeEntity(new BaseTimeEntity())
                 .build()
         );
+    }
+
+    private static void isValidMovement(ItineraryRequest ir) {
+        if (ir.getArrivalPlace() == null) {
+            throw new ItineraryException(EMPTY_ARRIVAL_PLACE);
+        }
+        if (ir.getDeparturePlace() == null) {
+            throw new ItineraryException(EMPTY_DEPARTURE_PLACE);
+        }
     }
 
     public static Itinerary getItineraryEntity(Trip trip, ItineraryRequest ir) {

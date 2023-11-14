@@ -4,7 +4,7 @@ Content-Type: application/json
 [
   {
     "type": "MOVEMENT",
-    "item": "버스",
+    "name": "버스",
     "startDate": "2023-10-25T17:03:10",
     "endDate": "2023-10-25T17:03:10",
     "order": 4,
@@ -13,14 +13,14 @@ Content-Type: application/json
   },
   {
     "type": "STAY",
-    "item": "도쿄 타워",
+    "name": "도쿄 타워",
     "startDate": "2023-10-25T17:03:10",
     "endDate": "2023-10-25T17:03:10",
     "order": 3
   },
   {
     "type": "LODGEMENT",
-    "item": "도쿄 온천있는 호텔",
+    "name": "도쿄 온천있는 호텔",
     "startDate": "2023-10-25T17:03:10",
     "endDate": "2023-10-25T17:03:10",
     "order": 5

@@ -21,7 +21,6 @@ public class MovementResponse extends ItineraryResponse {
     private LocalDateTime arrivalDate;
     private String departurePlace;
     private String arrivalPlace;
-    private String transportation;
     private String timeDifference;
     private String departureLocation;
     private String arrivalLocation;
@@ -37,7 +36,6 @@ public class MovementResponse extends ItineraryResponse {
             .arrivalDate(entity.getArrivalDate())
             .departurePlace(entity.getDeparturePlace())
             .arrivalPlace(entity.getArrivalPlace())
-            .transportation(entity.getTransportation())
             .timeDifference(
                 DateUtil.getTimeBetweenDate(entity.getDepartureDate(), entity.getArrivalDate()))
             .departureLocation(locationUtil.findLocation(entity.getDeparturePlace()))
