@@ -5,6 +5,7 @@ import static com.fastcampus.toyproject.domain.itinerary.exception.ItineraryExce
 import static com.fastcampus.toyproject.domain.itinerary.exception.ItineraryExceptionCode.ITINERARY_NOT_MATCH_TRIP;
 import static com.fastcampus.toyproject.domain.itinerary.exception.ItineraryExceptionCode.ITINERARY_SAVE_FAILED;
 import static com.fastcampus.toyproject.domain.itinerary.exception.ItineraryExceptionCode.NO_ITINERARY;
+import static com.fastcampus.toyproject.domain.trip.exception.TripExceptionCode.NOT_MATCH_BETWEEN_USER_AND_TRIP;
 import static com.fastcampus.toyproject.domain.trip.exception.TripExceptionCode.NO_SUCH_TRIP;
 
 import com.fastcampus.toyproject.domain.itinerary.dto.ItineraryRequest;
@@ -20,6 +21,7 @@ import com.fastcampus.toyproject.domain.trip.entity.Trip;
 import com.fastcampus.toyproject.domain.trip.exception.TripException;
 import com.fastcampus.toyproject.domain.trip.repository.TripRepository;
 import com.fastcampus.toyproject.domain.trip.service.TripService;
+import com.fastcampus.toyproject.domain.user.service.UserService;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -81,7 +83,7 @@ public class ItineraryService {
      */
     @Transactional
     public List<ItineraryResponse> insertItineraries(
-        Long tripId, List<ItineraryRequest> itineraryRequests
+        Long tripId, Long userId, List<ItineraryRequest> itineraryRequests
     ) {
         /*
         1. tripid를 통한 trip 객체 찾기. (method : getTrip(tripId))
@@ -91,6 +93,7 @@ public class ItineraryService {
          */
         List<ItineraryResponse> itineraryResponseList = new ArrayList<>();
         Trip trip = getTrip(tripId);
+        isMatchUserAndTrip(userId, trip);
 
         validateItineraryRequestOrder(itineraryRequests, trip);
 
@@ -116,16 +119,15 @@ public class ItineraryService {
     /**
      * 요청으로 들어온 itinerary 리스트의 순서가 맞는지 확인
      *
-     * @param itineraryRequests
+     * @param itineraryReqList
      * @param trip
      */
-    private void validateItineraryRequestOrder(List<ItineraryRequest> itineraryRequests,
-        Trip trip) {
+    private void validateItineraryRequestOrder(List<ItineraryRequest> itineraryReqList, Trip trip){
         List<Integer> orderList = getItineraryList(trip)
             .stream().map(Itinerary::getItineraryOrder)
             .collect(Collectors.toList());
 
-        for (ItineraryRequest ir : itineraryRequests) {
+        for (ItineraryRequest ir : itineraryReqList) {
             orderList.add(ir.getOrder());
         }
         ItineraryOrderUtil.validateItinerariesOrder(orderList);
@@ -162,6 +164,17 @@ public class ItineraryService {
     }
 
     /**
+     * trip 과 userId가 맞는지 검증
+     * @param userId
+     * @param trip
+     */
+    private static void isMatchUserAndTrip(Long userId, Trip trip) {
+        if (trip.getUser().getUserId() != userId) {
+            throw new TripException(NOT_MATCH_BETWEEN_USER_AND_TRIP);
+        }
+    }
+
+    /**
      * 여정 아이디 리스트 가져와 itinerary 들 삭제하는 메소드
      *
      * @param tripId
@@ -170,7 +183,7 @@ public class ItineraryService {
      */
     @Transactional
     public List<ItineraryResponse> deleteItineraries(
-        Long tripId, List<Long> deleteIdList
+        Long tripId, Long userId, List<Long> deleteIdList
     ) {
         //1. 해당 트립에, 삭제할 아이디들이 일단 존재하는지 확인.
         for (Long id : deleteIdList) {

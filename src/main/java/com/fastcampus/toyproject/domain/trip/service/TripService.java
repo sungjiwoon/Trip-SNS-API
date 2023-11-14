@@ -62,6 +62,17 @@ public class TripService {
     }
 
     /**
+     * trip 과 userId가 맞는지 검증
+     * @param userId
+     * @param trip
+     */
+    private static void isMatchUserAndTrip(Long userId, Trip trip) {
+        if (trip.getUser().getUserId() != userId) {
+            throw new TripException(NOT_MATCH_BETWEEN_USER_AND_TRIP);
+        }
+    }
+
+    /**
      * 삭제 되지 않은 trip 전부를 반환하는 메소드
      *
      * @return List<TripResponseDTO>
@@ -123,10 +134,7 @@ public class TripService {
      */
     public TripResponse updateTrip(Long userId, Long tripId, TripRequest tripRequest) {
         Trip existTrip = getTripByTripId(tripId);
-
-        if (existTrip.getUser() != userService.getUser(userId)) {
-            throw new TripException(NOT_MATCH_BETWEEN_USER_AND_TRIP);
-        }
+        isMatchUserAndTrip(userId, existTrip);
 
         existTrip.updateFromDTO(tripRequest);
         return TripResponse.fromEntity(tripRepository.save(existTrip));
@@ -139,9 +147,8 @@ public class TripService {
      */
     public TripResponse deleteTrip(Long userId, Long tripId) {
         Trip existTrip = getTripByTripId(tripId);
-        if (existTrip.getUser() != userService.getUser(userId)) {
-            throw new TripException(NOT_MATCH_BETWEEN_USER_AND_TRIP);
-        }
+        isMatchUserAndTrip(userId, existTrip);
+
         existTrip.delete();
         return TripResponse.fromEntity(tripRepository.save(existTrip));
     }
