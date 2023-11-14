@@ -2,6 +2,7 @@ package com.fastcampus.toyproject.domain.itinerary.controller;
 
 import com.fastcampus.toyproject.common.dto.ResponseDTO;
 import com.fastcampus.toyproject.common.util.DateUtil;
+import com.fastcampus.toyproject.config.security.jwt.UserPrincipal;
 import com.fastcampus.toyproject.domain.itinerary.dto.ItineraryRequest;
 import com.fastcampus.toyproject.domain.itinerary.dto.ItineraryResponse;
 import com.fastcampus.toyproject.domain.itinerary.dto.ItineraryUpdateRequest;
@@ -29,6 +30,7 @@ public class ItineraryController {
     @PostMapping("/{tripId}")
     public ResponseDTO<List<ItineraryResponse>> insertItineraries(
         @PathVariable final Long tripId,
+        final UserPrincipal userPrincipal,
         @Valid @RequestBody final List<ItineraryRequest> itRequestList
     ) {
         // 출발 시간 < 도착 시간인지 확인
@@ -39,23 +41,25 @@ public class ItineraryController {
             );
         }
         return ResponseDTO.ok("여정들 삽입 완료",
-            itineraryService.insertItineraries(tripId, itRequestList)
+            itineraryService.insertItineraries(tripId, userPrincipal.getUserId(),itRequestList)
         );
     }
 
     @PutMapping("/delete/{tripId}")
     public ResponseDTO<List<ItineraryResponse>> deleteItineraries(
         @PathVariable final Long tripId,
+        final UserPrincipal userPrincipal,
         @Valid @RequestBody final List<Long> itineraryIdList
     ) {
         return ResponseDTO.ok("여정들 삭제 완료",
-            itineraryService.deleteItineraries(tripId, itineraryIdList)
+            itineraryService.deleteItineraries(tripId, userPrincipal.getUserId(), itineraryIdList)
         );
     }
 
     @PutMapping("/{tripId}")
     public ResponseDTO<List<ItineraryResponse>> updateItineraries(
         @PathVariable final Long tripId,
+        final UserPrincipal userPrincipal,
         @Valid @RequestBody final List<ItineraryUpdateRequest> itUpdateRequestList) {
 
         // 출발 시간 < 도착 시간인지 확인
@@ -67,7 +71,7 @@ public class ItineraryController {
         }
 
         return ResponseDTO.ok("여정들 수정 완료",
-            itineraryService.updateItineraries(tripId, itUpdateRequestList)
+            itineraryService.updateItineraries(tripId, userPrincipal.getUserId(), itUpdateRequestList)
         );
     }
 }
