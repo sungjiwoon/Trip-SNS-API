@@ -185,6 +185,9 @@ public class ItineraryService {
     public List<ItineraryResponse> deleteItineraries(
         Long tripId, Long userId, List<Long> deleteIdList
     ) {
+        Trip trip = getTrip(tripId);
+        isMatchUserAndTrip(userId, trip);
+
         //1. 해당 트립에, 삭제할 아이디들이 일단 존재하는지 확인.
         for (Long id : deleteIdList) {
             Itinerary it = itineraryRepository
@@ -224,13 +227,14 @@ public class ItineraryService {
      */
     @Transactional(readOnly = false)
     public List<ItineraryResponse> updateItineraries(Long tripId,
-        List<ItineraryUpdateRequest> itineraryUpdateRequests) {
+        Long userId, List<ItineraryUpdateRequest> itineraryUpdateRequests) {
 
         if (itineraryUpdateRequests == null || itineraryUpdateRequests.isEmpty()) {
             throw new ItineraryException(EMPTY_ITINERARY);
         }
 
         Trip trip = getTrip(tripId);
+        isMatchUserAndTrip(userId, trip);
 
         //trip에 있는 여정들인지 확인.
         Map<Long, Boolean> map = new HashMap<>();
