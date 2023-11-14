@@ -2,6 +2,7 @@ package com.fastcampus.toyproject.domain.trip.controller;
 
 import com.fastcampus.toyproject.common.dto.ResponseDTO;
 import com.fastcampus.toyproject.common.util.DateUtil;
+import com.fastcampus.toyproject.config.security.jwt.UserPrincipal;
 import com.fastcampus.toyproject.domain.trip.dto.TripDetailResponse;
 import com.fastcampus.toyproject.domain.trip.dto.TripRequest;
 import com.fastcampus.toyproject.domain.trip.dto.TripResponse;
@@ -72,7 +73,7 @@ public class TripController {
 
     @PostMapping()
     public ResponseDTO<TripResponse> insertTrip(
-        Authentication authentication,
+        UserPrincipal userPrincipal,
         @Valid @RequestBody final TripRequest tripRequest
     ) {
         DateUtil.isStartDateEarlierThanEndDate(
@@ -80,9 +81,8 @@ public class TripController {
             tripRequest.getEndDate()
         );
 
-        User user = (User) authentication.getPrincipal();
-        log.info("TripController:: user name : {} ", user.getName());
-        Long userId = user.getUserId();
+        Long userId = userPrincipal.getUserId();
+        log.info("TripController:: user ID : {} ", userPrincipal.getUserId());
         return ResponseDTO.ok("여행 삽입 완료",
             tripService.insertTrip(userId, tripRequest)
         );
