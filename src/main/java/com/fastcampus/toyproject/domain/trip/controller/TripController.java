@@ -121,12 +121,12 @@ public class TripController {
     @DeleteMapping("/{tripId}")
 
     public ResponseDTO<Void> deleteTrip(
-        UserPrincipal userPrincipal,
+        final UserPrincipal userPrincipal,
         @PathVariable final Long tripId
     ) {
         Long userId = userPrincipal.getUserId();
         log.info("TripController:: user ID : {} ", userId);
-        tripService.deleteTrip(tripId);
+        tripService.deleteTrip(userPrincipal.getUserId(), tripId);
         return ResponseDTO.ok("여행 삭제 완료");
 
     }
