@@ -138,4 +138,24 @@ public class DefaultExceptionHandler {
             HttpStatus.INTERNAL_SERVER_ERROR
         );
     }
+
+    /**
+     * TripException을 처리하는 핸들러
+     * @param e TripException 인스턴스
+     * @param request HttpServletRequest
+     * @return ResponseEntity<ErrorResponseDTO>
+     */
+    @ExceptionHandler(value = { TripException.class })
+    public ResponseEntity<ErrorResponseDTO> handleTripException(
+        TripException e, HttpServletRequest request
+    ) {
+        log.error("Trip error occurred: {}", e.getErrorMsg(), e);
+        ErrorResponseDTO errorResponse = new ErrorResponseDTO(
+            e.getErrorCode().getStatus(),
+            e.getErrorCode().getCode(),
+            e.getErrorMsg()
+        );
+
+        return new ResponseEntity<>(errorResponse, e.getErrorCode().getStatus());
+    }
 }
