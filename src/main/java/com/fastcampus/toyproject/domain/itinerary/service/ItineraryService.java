@@ -2,6 +2,7 @@ package com.fastcampus.toyproject.domain.itinerary.service;
 
 import static com.fastcampus.toyproject.domain.itinerary.exception.ItineraryExceptionCode.EMPTY_ITINERARY;
 import static com.fastcampus.toyproject.domain.itinerary.exception.ItineraryExceptionCode.ITINERARY_ALREADY_DELETED;
+import static com.fastcampus.toyproject.domain.itinerary.exception.ItineraryExceptionCode.ITINERARY_NOT_MATCH_TRIP;
 import static com.fastcampus.toyproject.domain.itinerary.exception.ItineraryExceptionCode.ITINERARY_SAVE_FAILED;
 import static com.fastcampus.toyproject.domain.itinerary.exception.ItineraryExceptionCode.NO_ITINERARY;
 import static com.fastcampus.toyproject.domain.trip.exception.TripExceptionCode.NO_SUCH_TRIP;
@@ -22,7 +23,9 @@ import com.fastcampus.toyproject.domain.trip.service.TripService;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -214,13 +217,21 @@ public class ItineraryService {
             throw new ItineraryException(EMPTY_ITINERARY);
         }
 
-        Trip trip = null;
+        Trip trip = getTrip(tripId);
+
+        //trip에 있는 여정들인지 확인.
+        Map<Long, Boolean> map = new HashMap<>();
+        for (Itinerary it : trip.getItineraryList()) {
+            map.put(it.getItineraryId(), true);
+        }
 
         for (ItineraryUpdateRequest req : itineraryUpdateRequests) {
-
             Itinerary itinerary = itineraryRepository.findById(req.getItineraryId())
                 .orElseThrow(() -> new ItineraryException(NO_ITINERARY));
-            trip = itinerary.getTrip();
+
+            if (!map.containsKey(req.getItineraryId())) {
+                throw new ItineraryException(ITINERARY_NOT_MATCH_TRIP);
+            }
             itinerary.update(req);
         }
 
