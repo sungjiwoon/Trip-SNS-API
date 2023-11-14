@@ -60,19 +60,6 @@ public class TripService {
 
         return trip;
     }
-//
-//    /**
-//     * trip 객체로 연관된 itinerary들의 이름만 반환하는 메소드
-//     *
-//     * @param trip
-//     * @return string
-//     */
-//    public String getItineraryNamesByTrip(Trip trip) {
-//        return itineraryService.getItineraryResponseListByTrip(trip)
-//            .stream()
-//            .map(it -> it.getItineraryName())
-//            .collect(Collectors.joining(", "));
-//    }
 
     /**
      * 삭제 되지 않은 trip 전부를 반환하는 메소드
@@ -137,7 +124,7 @@ public class TripService {
     public TripResponse updateTrip(Long userId, Long tripId, TripRequest tripRequest) {
         Trip existTrip = getTripByTripId(tripId);
 
-        if (!existTrip.getUser().getUserId().equals(userId)) {
+        if (existTrip.getUser() != userService.getUser(userId)) {
             throw new TripException(NOT_MATCH_BETWEEN_USER_AND_TRIP);
         }
 
@@ -150,10 +137,13 @@ public class TripService {
      *
      * @param tripId
      */
-    public TripResponse deleteTrip(Long tripId) {
-        Trip trip = getTripByTripId(tripId);
-        trip.delete();
-        return TripResponse.fromEntity(tripRepository.save(trip));
+    public TripResponse deleteTrip(Long userId, Long tripId) {
+        Trip existTrip = getTripByTripId(tripId);
+        if (existTrip.getUser() != userService.getUser(userId)) {
+            throw new TripException(NOT_MATCH_BETWEEN_USER_AND_TRIP);
+        }
+        existTrip.delete();
+        return TripResponse.fromEntity(tripRepository.save(existTrip));
     }
 
     /**
