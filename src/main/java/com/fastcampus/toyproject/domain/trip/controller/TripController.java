@@ -90,7 +90,7 @@ public class TripController {
 
     @PutMapping("/{tripId}")
     public ResponseDTO<TripResponse> updateTrip(
-        @PathVariable final Long memberId,
+        UserPrincipal userPrincipal,
         @PathVariable final Long tripId,
         @Valid @RequestBody final TripRequest tripRequest
     ) {
@@ -98,10 +98,14 @@ public class TripController {
             tripRequest.getStartDate(),
             tripRequest.getEndDate()
         );
+
+        Long userId = userPrincipal.getUserId();
+        log.info("TripController:: user ID : {} ", userId);
         return ResponseDTO.ok("여행 수정 완료",
-            tripService.updateTrip(memberId, tripId, tripRequest)
+            tripService.updateTrip(userId, tripId, tripRequest)
         );
     }
+
 
     @DeleteMapping("/{tripId}")
     public ResponseDTO<TripResponse> deleteTrip(
