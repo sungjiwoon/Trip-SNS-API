@@ -28,6 +28,10 @@ public class SecurityConfig {
     private static final String[] getTrip = {
         "/api/trip", "/api/trip/**"
     };
+    private static final String[] error = {
+        "/error"
+    };
+
     private final TokenProvider tokenProvider;
     private final CorsFilter corsFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
@@ -59,10 +63,15 @@ public class SecurityConfig {
                     .toArray(AntPathRequestMatcher[]::new)
             ).permitAll()
             .requestMatchers(
-                Arrays.stream(getTrip)
-                    .map(s -> new AntPathRequestMatcher(s, "GET"))
+                Arrays.stream(error)
+                    .map(AntPathRequestMatcher::new)
                     .toArray(AntPathRequestMatcher[]::new)
             ).permitAll()
+//            .requestMatchers(
+//                Arrays.stream(getTrip)
+//                    .map(s -> new AntPathRequestMatcher(s, "GET"))
+//                    .toArray(AntPathRequestMatcher[]::new)
+//            ).permitAll()
             .anyRequest().authenticated()
             .and()
 
