@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/likes")
+@RequestMapping("/trip")
 @RequiredArgsConstructor
 public class LikeTripController {
 
     private final LikeTripService likeTripService;
 
-    @PostMapping("/{tripId}")
+    @PostMapping("/{tripId}/like")
     public ResponseEntity<?> toggleLike(
         Authentication authentication,
         @PathVariable Long tripId

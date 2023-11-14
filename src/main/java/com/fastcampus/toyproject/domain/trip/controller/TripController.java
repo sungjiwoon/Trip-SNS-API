@@ -7,12 +7,10 @@ import com.fastcampus.toyproject.domain.trip.dto.TripRequest;
 import com.fastcampus.toyproject.domain.trip.dto.TripResponse;
 import com.fastcampus.toyproject.domain.trip.service.TripService;
 import com.fastcampus.toyproject.domain.user.entity.User;
-import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.constraints.Range;
 import lombok.extern.slf4j.Slf4j;
@@ -82,10 +80,11 @@ public class TripController {
             tripRequest.getEndDate()
         );
 
-        //User user = (User) authentication.getPrincipal();
-        //log.info("TripController:: user name : {} ", user.getName());
+        User user = (User) authentication.getPrincipal();
+        log.info("TripController:: user name : {} ", user.getName());
+        Long userId = user.getUserId();
         return ResponseDTO.ok("여행 삽입 완료",
-            tripService.insertTrip(1L, tripRequest)
+            tripService.insertTrip(userId, tripRequest)
         );
     }
 
