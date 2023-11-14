@@ -7,6 +7,7 @@ import com.fastcampus.toyproject.common.dto.ErrorResponseDTO;
 import com.fastcampus.toyproject.common.dto.ResponseDTO;
 import com.fastcampus.toyproject.domain.itinerary.exception.ItineraryException;
 import com.fastcampus.toyproject.domain.trip.exception.TripException;
+import com.fastcampus.toyproject.domain.user.exception.UserException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,7 +35,8 @@ public class DefaultExceptionHandler {
      */
     @ExceptionHandler(value = {
         DefaultException.class,
-        SecurityException.class
+        SecurityException.class,
+        UserException.class
     })
     public ResponseEntity<ErrorResponseDTO> handleDefaultException(
         DefaultException e,

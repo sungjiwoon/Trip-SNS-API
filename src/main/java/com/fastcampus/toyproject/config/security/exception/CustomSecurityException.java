@@ -5,12 +5,7 @@ import com.fastcampus.toyproject.common.exception.ExceptionCode;
 
 public class CustomSecurityException extends DefaultException {
 
-    ExceptionCode errorCode;
-    String errorMsg;
-
-    public CustomSecurityException(SecurityExcpetionCode errorCode) {
-        super();
-        this.errorCode = errorCode;
-        this.errorMsg = errorCode.getMsg();
+    public CustomSecurityException(ExceptionCode errorCode) {
+        super(errorCode);
     }
 }
