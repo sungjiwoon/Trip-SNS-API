@@ -7,7 +7,7 @@ import com.fastcampus.toyproject.domain.trip.dto.TripDetailResponse;
 import com.fastcampus.toyproject.domain.trip.dto.TripRequest;
 import com.fastcampus.toyproject.domain.trip.dto.TripResponse;
 import com.fastcampus.toyproject.domain.trip.service.TripService;
-import com.fastcampus.toyproject.domain.user.entity.User;
+
 import java.util.List;
 import java.util.Optional;
 import javax.validation.Valid;
@@ -15,7 +15,7 @@ import javax.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.constraints.Range;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
