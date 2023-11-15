@@ -63,6 +63,7 @@ public class TripService {
 
     /**
      * trip 과 userId가 맞는지 검증
+     *
      * @param userId
      * @param trip
      */
@@ -155,19 +156,35 @@ public class TripService {
 
     /**
      * keyword 검색을 통한 여행 이름 리스트 출력
+     *
      * @param keyword
      * @return List<TripResponse>
      */
     @Transactional(readOnly = true)
     public Optional<List<TripResponse>> getTripByKeyword(String keyword) {
         Optional<List<Trip>> optionalTrips = tripRepository
-                .findByTripNameContains(keyword);
+            .findByTripNameContains(keyword);
 
         List<TripResponse> tripResponseList = new ArrayList<>();
         for (Trip trip : optionalTrips.get()) {
-            if (trip.getBaseTimeEntity().getDeletedAt() != null) continue;
+            if (trip.getBaseTimeEntity().getDeletedAt() != null) {
+                continue;
+            }
             tripResponseList.add(TripResponse.fromEntity(trip));
         }
         return Optional.ofNullable(tripResponseList);
+    }
+
+    @Transactional
+    public void updateLikesCount(Long tripId, boolean increase) {
+        Trip trip = getTripByTripId(tripId);
+        int currentLikes = trip.getLikesCount() != null ? trip.getLikesCount() : 0;
+
+        if (increase) {
+            trip.setLikesCount(currentLikes + 1);
+        } else if (currentLikes > 0) {
+            trip.setLikesCount(currentLikes - 1);
+        }
+
     }
 }
