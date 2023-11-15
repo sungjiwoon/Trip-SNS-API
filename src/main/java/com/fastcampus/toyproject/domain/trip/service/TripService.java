@@ -30,7 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class TripService {
 
     private final TripRepository tripRepository;
-    private final UserService userService;
+    private final UserRepository userRepository;
 
     /**
      * trip 아이디를 통한 trip 객체 반환하는 메소드
@@ -109,7 +109,7 @@ public class TripService {
     @Transactional
     public TripResponse insertTrip(Long userId, TripRequest tripRequest) {
         Trip trip = Trip.builder()
-            .user(userService.getUser(userId))
+            .user(userRepository.getReferenceById(userId))
             .tripName(tripRequest.getTripName())
             .startDate(tripRequest.getStartDate())
             .endDate(tripRequest.getEndDate())
