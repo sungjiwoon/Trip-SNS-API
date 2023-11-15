@@ -6,10 +6,7 @@ import static com.fastcampus.toyproject.domain.trip.exception.TripExceptionCode.
 import static com.fastcampus.toyproject.domain.trip.exception.TripExceptionCode.TRIP_ALREADY_DELETED;
 
 import com.fastcampus.toyproject.common.BaseTimeEntity;
-import com.fastcampus.toyproject.common.exception.DefaultException;
-import com.fastcampus.toyproject.common.exception.DefaultExceptionCode;
 import com.fastcampus.toyproject.domain.itinerary.entity.Itinerary;
-import com.fastcampus.toyproject.domain.itinerary.service.ItineraryService;
 import com.fastcampus.toyproject.domain.trip.dto.TripDetailResponse;
 import com.fastcampus.toyproject.domain.trip.dto.TripRequest;
 import com.fastcampus.toyproject.domain.trip.dto.TripResponse;
@@ -17,7 +14,6 @@ import com.fastcampus.toyproject.domain.trip.entity.Trip;
 import com.fastcampus.toyproject.domain.trip.exception.TripException;
 import com.fastcampus.toyproject.domain.trip.repository.TripRepository;
 import com.fastcampus.toyproject.domain.user.repository.UserRepository;
-import com.fastcampus.toyproject.domain.user.service.UserService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -62,6 +58,37 @@ public class TripService {
     }
 
     /**
+     * user 아이디를 통한 trip 객체 리스트 반환하는 메소드
+     *
+     * @param userId
+     * @return List<TripResponseDTO>
+     */
+    public Optional<List<TripResponse>> getTripByUserId(Long userId) {
+        Optional<List<Trip>> optionalTrips = tripRepository
+            .findAllByUser(userId);
+
+        List<TripResponse> tripResponseList = new ArrayList<>();
+        for (Trip trip : optionalTrips.get()) {
+            if (trip.getBaseTimeEntity().getDeletedAt() != null) continue;
+            tripResponseList.add(TripResponse.fromEntity(trip));
+        }
+        return Optional.ofNullable(tripResponseList);
+    }
+
+    /**
+     * trip 아이디와 user 아이디를 통해, 해당하는 trip과 그 여정을 반환하는 메소드
+     *
+     * @param tripId
+     * @param userId
+     * @return tripDetail
+     */
+    public TripDetailResponse findByTripIdAndUserId(Long tripId, Long userId) {
+        return tripRepository.findByTripIdAndUserId(tripId, userId)
+            .map(trip -> TripDetailResponse.fromEntity(trip))
+            .orElseThrow(() -> new TripException(NOT_MATCH_BETWEEN_USER_AND_TRIP));
+    }
+
+    /**
      * trip 과 userId가 맞는지 검증
      *
      * @param userId
@@ -76,7 +103,7 @@ public class TripService {
     /**
      * 삭제 되지 않은 trip 전부를 반환하는 메소드
      *
-     * @return List<TripResponseDTO>
+     * @return List<TripResponse>
      */
     @Transactional(readOnly = true)
     public List<TripResponse> getAllTrips() {
@@ -92,7 +119,7 @@ public class TripService {
      * trip과 연관된 itinerary 리스트 반환 (여행 상세 조회)
      *
      * @param tripId
-     * @return tripDetailDTO
+     * @return tripDetail
      */
     @Transactional(readOnly = true)
     public TripDetailResponse getTripDetail(Long tripId) {
@@ -105,7 +132,7 @@ public class TripService {
      *
      * @param userId
      * @param tripRequest
-     * @return tripResponseDTO
+     * @return tripResponse
      */
     @Transactional
     public TripResponse insertTrip(Long userId, TripRequest tripRequest) {
@@ -187,4 +214,7 @@ public class TripService {
         }
 
     }
+
+
+
 }
