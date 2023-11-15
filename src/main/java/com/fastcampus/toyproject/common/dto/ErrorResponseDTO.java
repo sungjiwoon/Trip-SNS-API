@@ -30,14 +30,4 @@ public class ErrorResponseDTO {
                 exceptionCode.getMsg()
         );
     }
-
-    public static ErrorResponseDTO error() {
-        return new ErrorResponseDTO(
-                INTERNAL_SERVER_ERROR.getStatus(),
-                INTERNAL_SERVER_ERROR.getCode(),
-                INTERNAL_SERVER_ERROR.getMsg()
-        );
-    }
-
-
 }
