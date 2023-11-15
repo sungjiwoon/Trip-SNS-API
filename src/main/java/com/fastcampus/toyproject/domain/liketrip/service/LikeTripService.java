@@ -26,17 +26,15 @@ public class LikeTripService {
         Trip trip = tripRepository.findById(request.getTripId())
             .orElseThrow(() -> new TripException(TripExceptionCode.NO_SUCH_TRIP));
 
-        LikeTrip likeTrip = likeTripRepository.findByUserUserIdAndTripTripId(userId,
-                request.getTripId())
+        LikeTrip likeTrip = likeTripRepository.findByUserUserIdAndTripTripId(userId, request.getTripId())
             .map(like -> {
                 boolean isCurrentlyLiked = like.getIsLike();
-                like.setIsLike(!isCurrentlyLiked);
-                like.setIsLike(!like.getIsLike());
-                updateLikesCount(trip, !isCurrentlyLiked);
+                like.setIsLike(!isCurrentlyLiked); // 상태 변경
+                updateLikesCount(trip, !isCurrentlyLiked); // 좋아요 개수 업데이트
                 return likeTripRepository.save(like);
             })
             .orElseGet(() -> {
-                updateLikesCount(trip, true);
+                updateLikesCount(trip, true); // 좋아요 추가
                 return likeTripRepository.save(new LikeTrip(user, trip, true));
             });
 
@@ -45,9 +43,14 @@ public class LikeTripService {
 
     private void updateLikesCount(Trip trip, boolean increase) {
         int currentLikes = trip.getLikesCount() != null ? trip.getLikesCount() : 0;
-        trip.setLikesCount(increase ? currentLikes + 1 : currentLikes - 1);
+        if (increase) {
+            trip.setLikesCount(currentLikes + 1);
+        } else if (currentLikes > 0) {
+            trip.setLikesCount(currentLikes - 1);
+        }
         tripRepository.save(trip);
     }
+
 
     private LikeTripResponse convertToResponse(LikeTrip likeTrip) {
         LikeTripResponse response = new LikeTripResponse();
