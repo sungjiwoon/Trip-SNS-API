@@ -8,6 +8,7 @@ import com.fastcampus.toyproject.domain.trip.entity.Trip;
 import com.fastcampus.toyproject.domain.trip.exception.TripException;
 import com.fastcampus.toyproject.domain.trip.exception.TripExceptionCode;
 import com.fastcampus.toyproject.domain.trip.repository.TripRepository;
+import com.fastcampus.toyproject.domain.trip.service.TripService;
 import com.fastcampus.toyproject.domain.user.entity.User;
 import com.fastcampus.toyproject.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -18,38 +19,27 @@ import org.springframework.stereotype.Service;
 public class LikeTripService {
 
     private final LikeTripRepository likeTripRepository;
-    private final TripRepository tripRepository;
+    private final TripService tripService;
     private final UserService userService;
 
     public LikeTripResponse toggleLike(Long userId, LikeTripRequest request) {
         User user = userService.getUser(userId);
-        Trip trip = tripRepository.findById(request.getTripId())
-            .orElseThrow(() -> new TripException(TripExceptionCode.NO_SUCH_TRIP));
+        Trip trip = tripService.getTripByTripId(request.getTripId());
 
         LikeTrip likeTrip = likeTripRepository.findByUserUserIdAndTripTripId(userId,
                 request.getTripId())
             .map(like -> {
                 boolean isCurrentlyLiked = like.getIsLike();
                 like.setIsLike(!isCurrentlyLiked);
-                updateLikesCount(trip, !isCurrentlyLiked);
+                tripService.updateLikesCount(trip.getTripId(), !isCurrentlyLiked);
                 return likeTripRepository.save(like);
             })
             .orElseGet(() -> {
-                updateLikesCount(trip, true);
+                tripService.updateLikesCount(trip.getTripId(), true);
                 return likeTripRepository.save(new LikeTrip(user, trip, true));
             });
 
         return convertToResponse(likeTrip);
-    }
-
-    private void updateLikesCount(Trip trip, boolean increase) {
-        int currentLikes = trip.getLikesCount() != null ? trip.getLikesCount() : 0;
-        if (increase) {
-            trip.setLikesCount(currentLikes + 1);
-        } else if (currentLikes > 0) {
-            trip.setLikesCount(currentLikes - 1);
-        }
-        tripRepository.save(trip);
     }
 
 
