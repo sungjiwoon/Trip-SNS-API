@@ -1,62 +1,47 @@
 package com.fastcampus.toyproject.domain.user.controller;
 
 import com.fastcampus.toyproject.common.dto.ResponseDTO;
-import com.fastcampus.toyproject.domain.user.dto.LoginDto;
-import com.fastcampus.toyproject.domain.user.dto.TokenDto;
-import com.fastcampus.toyproject.domain.user.dto.TokenRequestDto;
-import com.fastcampus.toyproject.domain.user.dto.UserRequestDTO;
-import com.fastcampus.toyproject.domain.user.dto.UserResponseDTO;
-import com.fastcampus.toyproject.domain.user.entity.User;
+import com.fastcampus.toyproject.config.security.jwt.UserPrincipal;
+import com.fastcampus.toyproject.domain.liketrip.dto.LikeTripResponse;
+import com.fastcampus.toyproject.domain.trip.dto.TripDetailResponse;
+import com.fastcampus.toyproject.domain.trip.dto.TripResponse;
 import com.fastcampus.toyproject.domain.user.service.UserService;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.connector.Response;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/join")
-    public ResponseDTO<UserResponseDTO> insert(
-        @Valid @RequestBody UserRequestDTO userRequestDTO) {
-
-        UserResponseDTO user = userService.insertUser(userRequestDTO);
-        return ResponseDTO.ok("회원 등록 성공!", user);
+    @GetMapping("/trip-list")
+    public ResponseDTO<List<TripResponse>> getAllTrip(
+        final UserPrincipal userPrincipal) {
+        return userService.getAllTrip(userPrincipal.getUserId())
+            .map(tripResponses -> ResponseDTO.ok("사용자 여행 검색 완료", tripResponses))
+            /*아 여기 null이 아니라 빈 리스트 만들고 싶은데 오버라이딩 메소드 생기면서 생각대로 안 되네요*/
+            .orElse(ResponseDTO.ok("검색된 여행이 없습니다.", null));
     }
 
-    @PostMapping("/login")
-    public ResponseDTO<Void> login(
-        @Valid @RequestBody LoginDto loginDto,
-        HttpServletResponse response
+    @GetMapping("/trip-detail/{tripId}")
+    public ResponseDTO<TripDetailResponse> getDetailTrip(
+        final UserPrincipal userPrincipal,
+        @PathVariable final Long tripId) {
+        return ResponseDTO.ok("사용자 상세 여행 검색 완료", userService.getDetailTrip(userPrincipal.getUserId(), tripId));
+    }
+
+    @GetMapping("/trip-like-list")
+    public ResponseDTO<List<TripResponse>> getLikeTrip(
+        final UserPrincipal userPrincipal
     ){
-
-        TokenDto tokenDto = userService.login(loginDto);
-
-        Cookie cookie = new Cookie("access_token", tokenDto.getAccessToken() );
-        cookie.setMaxAge(tokenDto.getAccessTokenExpiresIn().intValue());
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-
-        response.addCookie(cookie);
-
-        return ResponseDTO.ok("로그인 성공");
+        return ResponseDTO.ok("사용자 좋아요 여행 검색 완료", userService.getLikeTrip(userPrincipal.getUserId()));
     }
-
-    @PostMapping("/reissue")
-    public ResponseDTO<TokenDto> reissue(@RequestBody TokenRequestDto tokenRequestDto){
-        return ResponseDTO.ok("Refesh 성공", userService.reissue(tokenRequestDto));
-    }
-
 
 }
 
