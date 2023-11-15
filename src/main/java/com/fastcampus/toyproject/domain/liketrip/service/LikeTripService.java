@@ -12,29 +12,41 @@ import com.fastcampus.toyproject.domain.user.entity.User;
 import com.fastcampus.toyproject.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 @Service
 @RequiredArgsConstructor
 public class LikeTripService {
+
     private final LikeTripRepository likeTripRepository;
     private final TripRepository tripRepository;
     private final UserService userService;
+
     public LikeTripResponse toggleLike(Long userId, LikeTripRequest request) {
         User user = userService.getUser(userId);
         Trip trip = tripRepository.findById(request.getTripId())
             .orElseThrow(() -> new TripException(TripExceptionCode.NO_SUCH_TRIP));
 
-        LikeTrip likeTrip = likeTripRepository.findByUserUserIdAndTripTripId(userId, request.getTripId())
+        LikeTrip likeTrip = likeTripRepository.findByUserUserIdAndTripTripId(userId,
+                request.getTripId())
             .map(like -> {
-
+                boolean isCurrentlyLiked = like.getIsLike();
+                like.setIsLike(!isCurrentlyLiked);
                 like.setIsLike(!like.getIsLike());
+                updateLikesCount(trip, !isCurrentlyLiked);
                 return likeTripRepository.save(like);
             })
             .orElseGet(() -> {
-
+                updateLikesCount(trip, true);
                 return likeTripRepository.save(new LikeTrip(user, trip, true));
             });
 
         return convertToResponse(likeTrip);
+    }
+
+    private void updateLikesCount(Trip trip, boolean increase) {
+        int currentLikes = trip.getLikesCount() != null ? trip.getLikesCount() : 0;
+        trip.setLikesCount(increase ? currentLikes + 1 : currentLikes - 1);
+        tripRepository.save(trip);
     }
 
     private LikeTripResponse convertToResponse(LikeTrip likeTrip) {
