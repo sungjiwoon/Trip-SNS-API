@@ -5,7 +5,9 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/ToyProject?createDatabaseIfNotExist=true&useSSL=true
     username: root
-    password: root1234!!
+
+
+    password: dnwnrlfls12
 
   jpa:
     hibernate:

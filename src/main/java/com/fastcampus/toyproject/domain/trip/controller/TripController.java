@@ -126,7 +126,7 @@ public class TripController {
     ) {
         Long userId = userPrincipal.getUserId();
         log.info("TripController:: user ID : {} ", userId);
-        tripService.deleteTrip(userId,tripId);
+        tripService.deleteTrip(tripId);
         return ResponseDTO.ok("여행 삭제 완료");
 
     }

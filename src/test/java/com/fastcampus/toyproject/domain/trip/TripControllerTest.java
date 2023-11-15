@@ -74,7 +74,7 @@ public class TripControllerTest {
 
 //    @Test
     public void deleteTripTest() throws Exception {
-        given(tripService.deleteTrip(anyLong(), anyLong())).willReturn(null);
+        given(tripService.deleteTrip(anyLong(), anyLong() )).willReturn(null);
 
         mockMvc.perform(delete("/api/member/1/trip/1"))
             .andDo(print())

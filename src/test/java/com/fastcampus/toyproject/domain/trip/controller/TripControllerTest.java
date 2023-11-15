@@ -85,13 +85,13 @@ class TripControllerTest {
     }
 
 //    @Test
-/*    public void deleteTripTest() throws Exception {
-        given(tripService.deleteTrip(anyLong())).willReturn(null);
+    public void deleteTripTest() throws Exception {
+        given(tripService.deleteTrip(anyLong(), anyLong())).willReturn(null);
 
         mockMvc.perform(delete("/api/member/1/trip/1"))
             .andDo(print())
             .andExpect(status().isOk());
-    }*/
+    }
 
 //    @Test
 //    void getAllTrips() throws Exception {
