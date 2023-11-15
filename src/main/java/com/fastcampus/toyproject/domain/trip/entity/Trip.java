@@ -79,6 +79,7 @@ public class Trip {
     @Comment("국내여행 여부")
     private Boolean isDomestic;
 
+    @ColumnDefault("0")
     @Comment("좋아요 개수")
     private Integer likesCount;
 
@@ -104,6 +105,10 @@ public class Trip {
         if (this.likesCount == null) {
             this.likesCount = 0;
         }
+    }
+
+    public void setLikesCount(Integer likesCount) {
+        this.likesCount = likesCount;
     }
 
 
