@@ -15,7 +15,6 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 public class MovementResponse extends ItineraryResponse {
 
-    private static LocationUtil locationUtil = new LocationUtil();
 
     private LocalDateTime departureDate;
     private LocalDateTime arrivalDate;
@@ -38,8 +37,8 @@ public class MovementResponse extends ItineraryResponse {
             .arrivalPlace(entity.getArrivalPlace())
             .timeDifference(
                 DateUtil.getTimeBetweenDate(entity.getDepartureDate(), entity.getArrivalDate()))
-            .departureLocation(locationUtil.findLocation(entity.getDeparturePlace()))
-            .arrivalLocation(locationUtil.findLocation(entity.getArrivalPlace()))
+            .departureLocation(LocationUtil.requestKeywordSearch(entity.getDeparturePlace()))
+            .arrivalLocation(LocationUtil.requestKeywordSearch(entity.getArrivalPlace()))
             .build();
     }
 }

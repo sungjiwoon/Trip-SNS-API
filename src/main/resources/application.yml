@@ -17,9 +17,8 @@ spring:
         show_sql: true
         format_sql: true
 
-  google-api:
-    base-url: https://maps.googleapis.com/maps/api/geocode/json?address=
-    key: API_KEY
+  kakao-api:
+    key: ${API_KEY}
 
 jwt:
   secret: kCXoHrvI0tyx66krErbdTIjUrylFcJQLq4IFSy0NYdNVWWSggYFRWOvuSNsswJtp
