@@ -56,28 +56,22 @@ public class TripController {
 
     @GetMapping("/search")
     public ResponseDTO<List<TripResponse>> searchTripListByKeyword(
-
             @Valid @RequestParam("keyword")
             @NotBlank(message = "검색어를 채워주세요")
             @Range(min = 1, max = 10, message = "검색어는 한 글자 이상이어야 합니다.")
             final String keyword
-
     ) {
-        System.out.println("keyword : " + keyword);
+        log.info("keyword : {}", keyword);
         Optional<List<TripResponse>> optional = tripService.getTripByKeyword(keyword);
         if (optional.get().size() == 0) {
-            return ResponseDTO.ok(
-                "검색된 여행이 없습니다.", null
-            );
+            return ResponseDTO.ok("검색된 여행이 없습니다.", optional.get());
         }
         return ResponseDTO.ok("여행 검색 완료", optional.get());
     }
 
     @PostMapping()
     public ResponseDTO<TripResponse> insertTrip(
-
-        UserPrincipal userPrincipal,
-
+        final UserPrincipal userPrincipal,
         @Valid @RequestBody final TripRequest tripRequest
     ) {
         DateUtil.isStartDateEarlierThanEndDate(
@@ -88,15 +82,12 @@ public class TripController {
         Long userId = userPrincipal.getUserId();
         log.info("TripController:: user ID : {} ", userPrincipal.getUserId());
         return ResponseDTO.ok("여행 삽입 완료",
-
             tripService.insertTrip(userId, tripRequest)
-
         );
     }
 
     @PutMapping("/{tripId}")
     public ResponseDTO<TripResponse> updateTrip(
-
         @PathVariable final Long tripId,
         final UserPrincipal userPrincipal,
         @Valid @RequestBody final TripRequest tripRequest
@@ -109,19 +100,14 @@ public class TripController {
         Long userId = userPrincipal.getUserId();
         log.info("TripController:: user ID : {} ", userId);
         return ResponseDTO.ok("여행 수정 완료",
-
             tripService.updateTrip(userId, tripId, tripRequest)
-
-        
-
         );
     }
 
 
     @DeleteMapping("/{tripId}")
-
     public ResponseDTO<Void> deleteTrip(
-        UserPrincipal userPrincipal,
+        final UserPrincipal userPrincipal,
         @PathVariable final Long tripId
     ) {
         Long userId = userPrincipal.getUserId();
