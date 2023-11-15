@@ -209,8 +209,11 @@ public class ItineraryService {
                 .findById(id)
                 .orElseThrow(() -> new ItineraryException(NO_ITINERARY));
             it.delete();
-            itineraryRepository.save(it);
-            deleteItList.add(ItineraryResponse.fromEntity(it));
+            Itinerary saveIt = itineraryRepository.save(it);
+            if (saveIt == null) {
+                throw new ItineraryException(ITINERARY_SAVE_FAILED);
+            }
+            deleteItList.add(ItineraryResponse.fromEntity(saveIt));
         }
 
         //3. 남은 여정들의 순서 재정의 - 여정 순서대로 entity 정렬
@@ -250,6 +253,10 @@ public class ItineraryService {
                 throw new ItineraryException(ITINERARY_NOT_MATCH_TRIP);
             }
             itinerary.update(req);
+            Itinerary saveIt = itineraryRepository.save(itinerary);
+            if (saveIt == null) {
+                throw new ItineraryException(ITINERARY_SAVE_FAILED);
+            }
         }
 
         return getItineraryResponseListByTrip(trip);
