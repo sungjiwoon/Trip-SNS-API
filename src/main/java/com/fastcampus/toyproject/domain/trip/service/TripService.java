@@ -14,7 +14,7 @@ import com.fastcampus.toyproject.domain.trip.dto.TripResponse;
 import com.fastcampus.toyproject.domain.trip.entity.Trip;
 import com.fastcampus.toyproject.domain.trip.exception.TripException;
 import com.fastcampus.toyproject.domain.trip.repository.TripRepository;
-import com.fastcampus.toyproject.domain.user.service.UserService;
+import com.fastcampus.toyproject.domain.user.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
