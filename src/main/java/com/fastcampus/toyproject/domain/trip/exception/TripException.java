@@ -8,10 +8,7 @@ import lombok.Getter;
 @Getter
 public class TripException extends DefaultException {
 
-    ExceptionCode errorCode;
-
-    public TripException(TripExceptionCode errorCode) {
+    public TripException(ExceptionCode errorCode) {
         super(errorCode);
-        this.errorCode = errorCode;
     }
 }

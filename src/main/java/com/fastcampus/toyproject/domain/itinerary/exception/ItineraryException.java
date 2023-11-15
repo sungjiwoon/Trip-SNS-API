@@ -9,10 +9,7 @@ import lombok.Getter;
 @Getter
 public class ItineraryException extends DefaultException {
 
-    ExceptionCode errorCode;
-
-    public ItineraryException(ItineraryExceptionCode errorCode) {
+    public ItineraryException(ExceptionCode errorCode) {
         super(errorCode);
-        this.errorCode = errorCode;
     }
 }
