@@ -118,10 +118,7 @@ public class TripService {
             .build();
 
         Trip saveTrip = tripRepository.save(trip);
-        if (saveTrip != null) {
-            return TripResponse.fromEntity(trip);
-        }
-        return null;
+        return TripResponse.fromEntity(saveTrip);
     }
 
     /**
