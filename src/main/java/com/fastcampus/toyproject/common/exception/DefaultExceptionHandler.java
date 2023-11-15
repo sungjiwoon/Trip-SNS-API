@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -76,6 +77,36 @@ public class DefaultExceptionHandler {
         return new ResponseEntity<>(
             ErrorResponseDTO.error(BAD_REQUEST),
             HttpStatus.BAD_REQUEST
+        );
+    }
+
+    /**
+     * @RequestParam valid 할 때 예외 처리
+     * @param e
+     * @param request
+     * @return
+     */
+    @ExceptionHandler(value = {
+        ConstraintViolationException.class
+    })
+    public ResponseEntity<ErrorResponseDTO> handleConstraintViolationException(
+            ConstraintViolationException e, HttpServletRequest request
+    ) {
+        log.error("ConstraintViolationException error url : {}, message : {}",
+                request.getRequestURI(),
+                e.getMessage()
+        );
+        //searchTripListByKeyword.keyword: 검색어를 채워주세요 -> "검색어를 채워주세요" 반환.
+        String[] msgList = e.getMessage().split(":");
+        String msg = msgList[msgList.length-1].substring(1);
+
+        return new ResponseEntity<>(
+                new ErrorResponseDTO(
+                        BAD_REQUEST.getStatus(),
+                        BAD_REQUEST.getCode(),
+                        msg
+                ),
+                HttpStatus.BAD_REQUEST
         );
     }
 

@@ -6,6 +6,11 @@ import static com.fastcampus.toyproject.domain.user.exception.UserExceptionCode.
 
 import com.fastcampus.toyproject.config.security.jwt.TokenProvider;
 import com.fastcampus.toyproject.config.security.jwt.UserPrincipal;
+import com.fastcampus.toyproject.domain.liketrip.dto.LikeTripResponse;
+import com.fastcampus.toyproject.domain.liketrip.service.LikeTripService;
+import com.fastcampus.toyproject.domain.trip.dto.TripDetailResponse;
+import com.fastcampus.toyproject.domain.trip.dto.TripResponse;
+import com.fastcampus.toyproject.domain.trip.service.TripService;
 import com.fastcampus.toyproject.domain.user.dto.LoginDto;
 import com.fastcampus.toyproject.domain.user.dto.RefreshToken;
 import com.fastcampus.toyproject.domain.user.dto.TokenDto;
@@ -14,10 +19,13 @@ import com.fastcampus.toyproject.domain.user.dto.UserRequestDTO;
 import com.fastcampus.toyproject.domain.user.dto.UserResponseDTO;
 import com.fastcampus.toyproject.domain.user.entity.User;
 import com.fastcampus.toyproject.domain.user.exception.UserException;
-import com.fastcampus.toyproject.domain.user.exception.UserExceptionCode;
 import com.fastcampus.toyproject.domain.user.repository.RefreshTokenRepository;
 import com.fastcampus.toyproject.domain.user.repository.UserRepository;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import org.apache.el.stream.Stream;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,6 +39,8 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final TripService tripService;
+    private final LikeTripService likeTripService;
 
     @Transactional
     public UserResponseDTO insertUser(UserRequestDTO userRequestDTO) {
@@ -93,5 +103,20 @@ public class UserService {
 
         return tokenDto;
 
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<List<TripResponse>> getAllTrip(Long userId) {
+        return tripService.getTripByUserId(userId);
+    }
+
+    @Transactional(readOnly = true)
+    public TripDetailResponse getDetailTrip(Long userId, Long tripId) {
+        return tripService.findByTripIdAndUserId(tripId, userId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<TripResponse> getLikeTrip(Long userId) {
+        return likeTripService.getLikeTripByUserId(userId);
     }
 }
