@@ -5,6 +5,8 @@ import com.fastcampus.toyproject.domain.liketrip.dto.LikeTripResponse;
 import com.fastcampus.toyproject.domain.liketrip.entity.LikeTrip;
 import com.fastcampus.toyproject.domain.liketrip.repository.LikeTripRepository;
 import com.fastcampus.toyproject.domain.trip.entity.Trip;
+import com.fastcampus.toyproject.domain.trip.exception.TripException;
+import com.fastcampus.toyproject.domain.trip.exception.TripExceptionCode;
 import com.fastcampus.toyproject.domain.trip.repository.TripRepository;
 import com.fastcampus.toyproject.domain.user.entity.User;
 import com.fastcampus.toyproject.domain.user.service.UserService;
@@ -19,11 +21,11 @@ public class LikeTripService {
     public LikeTripResponse toggleLike(Long userId, LikeTripRequest request) {
         User user = userService.getUser(userId);
         Trip trip = tripRepository.findById(request.getTripId())
-            .orElseThrow(() -> new RuntimeException("Trip not found"));
+            .orElseThrow(() -> new TripException(TripExceptionCode.NO_SUCH_TRIP));
 
         LikeTrip likeTrip = likeTripRepository.findByUserUserIdAndTripTripId(userId, request.getTripId())
             .map(like -> {
-                // 현재 상태 반전
+
                 like.setIsLike(!like.getIsLike());
                 return likeTripRepository.save(like);
             })
