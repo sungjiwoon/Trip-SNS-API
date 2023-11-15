@@ -16,6 +16,8 @@ import com.fastcampus.toyproject.domain.trip.exception.TripException;
 import com.fastcampus.toyproject.domain.trip.repository.TripRepository;
 import com.fastcampus.toyproject.domain.user.service.UserService;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -54,6 +56,7 @@ public class TripService {
                 i--;
             }
         }
+        Collections.sort(list, Comparator.comparingInt(Itinerary::getItineraryOrder));
         return trip;
     }
 
