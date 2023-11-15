@@ -5,11 +5,13 @@ import com.fastcampus.toyproject.domain.user.entity.Authority;
 import com.fastcampus.toyproject.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode
 public class UserResponseDTO {
 
     private Long userId;
