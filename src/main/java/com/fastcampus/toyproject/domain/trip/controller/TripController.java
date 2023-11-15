@@ -61,7 +61,7 @@ public class TripController {
     public ResponseDTO<List<TripResponse>> searchTripListByKeyword(
             @Valid @RequestParam("keyword")
             @NotBlank(message = "검색어를 채워주세요")
-            @Length(min = 1, max = 15, message = "검색어는 한 글자 이상이어야 합니다.")
+            @Length(min = 1, max = 15, message = "검색어 길이는 1글자 ~ 15글자 사이어야 합니다.")
             final String keyword
     ) {
         log.info("keyword : {}", keyword);
