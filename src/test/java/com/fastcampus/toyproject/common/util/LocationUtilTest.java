@@ -25,17 +25,13 @@ class LocationUtilTest {
 
         String location1 = "청와대";
         String location2 = "백악관";
+        String location3 = "";
+        String location4 = "런던 브리타니아 인터내셔널 호텔";
 
         System.out.println("청와대: " + LocationUtil.requestKeywordSearch(location1));
         System.out.println("백악관: " + LocationUtil.requestKeywordSearch(location2));
-
-    }
-
-   @Test
-    void 실패() throws IOException {
-
-        String location3 = "";
-       LocationUtil.requestKeywordSearch(location3);
+        System.out.println("공백: " + LocationUtil.requestKeywordSearch(location3));
+        System.out.println("런던 브리타니아 인터내셔널 호텔: " + LocationUtil.requestKeywordSearch(location4));
 
     }
 
