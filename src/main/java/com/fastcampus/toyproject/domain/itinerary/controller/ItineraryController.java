@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("api/trip-itineraries")
+@RequestMapping("/api/trip-itineraries")
 public class ItineraryController {
 
     private final ItineraryService itineraryService;
