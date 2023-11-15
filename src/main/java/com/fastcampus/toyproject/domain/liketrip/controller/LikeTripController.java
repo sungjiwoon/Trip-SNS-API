@@ -20,7 +20,7 @@ public class LikeTripController {
 
     @PostMapping("/{tripId}/like")
     public ResponseDTO<LikeTripResponse> toggleLike(
-        UserPrincipal userPrincipal,
+        final UserPrincipal userPrincipal,
         @PathVariable final Long tripId
     ) {
         Long userId = userPrincipal.getUserId();
