@@ -13,5 +13,6 @@ public class ItineraryException extends DefaultException {
 
     public ItineraryException(ItineraryExceptionCode errorCode) {
         super(errorCode);
+        this.errorCode = errorCode;
     }
 }

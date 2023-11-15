@@ -12,5 +12,6 @@ public class TripException extends DefaultException {
 
     public TripException(TripExceptionCode errorCode) {
         super(errorCode);
+        this.errorCode = errorCode;
     }
 }
