@@ -4,12 +4,10 @@ package com.fastcampus.toyproject.domain.trip.service;
 import static com.fastcampus.toyproject.domain.trip.exception.TripExceptionCode.NOT_MATCH_BETWEEN_USER_AND_TRIP;
 import static com.fastcampus.toyproject.domain.trip.exception.TripExceptionCode.NO_SUCH_TRIP;
 import static com.fastcampus.toyproject.domain.trip.exception.TripExceptionCode.TRIP_ALREADY_DELETED;
+import static com.fastcampus.toyproject.domain.trip.exception.TripExceptionCode.TRIP_SAVE_FAILED;
 
 import com.fastcampus.toyproject.common.BaseTimeEntity;
-import com.fastcampus.toyproject.common.exception.DefaultException;
-import com.fastcampus.toyproject.common.exception.DefaultExceptionCode;
 import com.fastcampus.toyproject.domain.itinerary.entity.Itinerary;
-import com.fastcampus.toyproject.domain.itinerary.service.ItineraryService;
 import com.fastcampus.toyproject.domain.trip.dto.TripDetailResponse;
 import com.fastcampus.toyproject.domain.trip.dto.TripRequest;
 import com.fastcampus.toyproject.domain.trip.dto.TripResponse;
@@ -17,8 +15,9 @@ import com.fastcampus.toyproject.domain.trip.entity.Trip;
 import com.fastcampus.toyproject.domain.trip.exception.TripException;
 import com.fastcampus.toyproject.domain.trip.repository.TripRepository;
 import com.fastcampus.toyproject.domain.user.repository.UserRepository;
-import com.fastcampus.toyproject.domain.user.service.UserService;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -57,7 +56,7 @@ public class TripService {
                 i--;
             }
         }
-
+        Collections.sort(list, Comparator.comparingInt(Itinerary::getItineraryOrder));
         return trip;
     }
 
@@ -119,10 +118,10 @@ public class TripService {
             .build();
 
         Trip saveTrip = tripRepository.save(trip);
-        if (saveTrip != null) {
-            return TripResponse.fromEntity(trip);
+        if (saveTrip == null) {
+            throw new TripException(TRIP_SAVE_FAILED);
         }
-        return null;
+        return TripResponse.fromEntity(trip);
     }
 
     /**
@@ -138,7 +137,12 @@ public class TripService {
         isMatchUserAndTrip(userId, existTrip);
 
         existTrip.updateFromDTO(tripRequest);
-        return TripResponse.fromEntity(tripRepository.save(existTrip));
+
+        Trip saveTrip = tripRepository.save(existTrip);
+        if (saveTrip == null) {
+            throw new TripException(TRIP_SAVE_FAILED);
+        }
+        return TripResponse.fromEntity(saveTrip);
     }
 
     /**
@@ -151,7 +155,12 @@ public class TripService {
         isMatchUserAndTrip(userId, existTrip);
 
         existTrip.delete();
-        return TripResponse.fromEntity(tripRepository.save(existTrip));
+
+        Trip saveTrip = tripRepository.save(existTrip);
+        if (saveTrip == null) {
+            throw new TripException(TRIP_SAVE_FAILED);
+        }
+        return TripResponse.fromEntity(saveTrip);
     }
 
     /**

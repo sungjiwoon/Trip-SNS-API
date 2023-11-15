@@ -13,8 +13,10 @@ import java.util.Optional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/trip")
 @Slf4j
+@Validated
 public class TripController {
 
     private final TripService tripService;
@@ -56,28 +59,22 @@ public class TripController {
 
     @GetMapping("/search")
     public ResponseDTO<List<TripResponse>> searchTripListByKeyword(
-
             @Valid @RequestParam("keyword")
             @NotBlank(message = "검색어를 채워주세요")
-            @Range(min = 1, max = 10, message = "검색어는 한 글자 이상이어야 합니다.")
+            @Length(min = 1, max = 15, message = "검색어 길이는 1글자 ~ 15글자 사이어야 합니다.")
             final String keyword
-
     ) {
-        System.out.println("keyword : " + keyword);
-        Optional<List<TripResponse>> optional = tripService.getTripByKeyword(keyword);
+        log.info("keyword : {}", keyword);
+        Optional<List<TripResponse>> optional = tripService.getTripByKeyword(keyword.trim());
         if (optional.get().size() == 0) {
-            return ResponseDTO.ok(
-                "검색된 여행이 없습니다.", null
-            );
+            return ResponseDTO.ok("검색된 여행이 없습니다.", optional.get());
         }
         return ResponseDTO.ok("여행 검색 완료", optional.get());
     }
 
     @PostMapping()
     public ResponseDTO<TripResponse> insertTrip(
-
         final UserPrincipal userPrincipal,
-
         @Valid @RequestBody final TripRequest tripRequest
     ) {
         DateUtil.isStartDateEarlierThanEndDate(
@@ -88,15 +85,12 @@ public class TripController {
         Long userId = userPrincipal.getUserId();
         log.info("TripController:: user ID : {} ", userPrincipal.getUserId());
         return ResponseDTO.ok("여행 삽입 완료",
-
             tripService.insertTrip(userId, tripRequest)
-
         );
     }
 
     @PutMapping("/{tripId}")
     public ResponseDTO<TripResponse> updateTrip(
-
         @PathVariable final Long tripId,
         final UserPrincipal userPrincipal,
         @Valid @RequestBody final TripRequest tripRequest
@@ -109,17 +103,12 @@ public class TripController {
         Long userId = userPrincipal.getUserId();
         log.info("TripController:: user ID : {} ", userId);
         return ResponseDTO.ok("여행 수정 완료",
-
             tripService.updateTrip(userId, tripId, tripRequest)
-
-        
-
         );
     }
 
 
     @DeleteMapping("/{tripId}")
-
     public ResponseDTO<Void> deleteTrip(
         final UserPrincipal userPrincipal,
         @PathVariable final Long tripId
