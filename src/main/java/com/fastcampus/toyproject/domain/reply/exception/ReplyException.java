@@ -6,16 +6,7 @@ import lombok.Getter;
 
 @Getter
 public class ReplyException extends DefaultException {
-
-    ExceptionCode exceptionCode;
-    String errorMsg;
-
-    public ReplyException(ReplyExceptionCode exceptionCode) {
+    public ReplyException(ExceptionCode exceptionCode) {
         super(exceptionCode);
-        this.exceptionCode = exceptionCode;
-        this.errorMsg = exceptionCode.getMsg();
     }
-
-
-
 }
