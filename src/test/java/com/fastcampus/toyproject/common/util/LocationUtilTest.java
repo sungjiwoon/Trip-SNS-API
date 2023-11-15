@@ -1,5 +1,7 @@
 package com.fastcampus.toyproject.common.util;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +30,11 @@ class LocationUtilTest {
         String location3 = "";
         String location4 = "런던 브리타니아 인터내셔널 호텔";
 
-        System.out.println("청와대: " + LocationUtil.requestKeywordSearch(location1));
-        System.out.println("백악관: " + LocationUtil.requestKeywordSearch(location2));
-        System.out.println("공백: " + LocationUtil.requestKeywordSearch(location3));
-        System.out.println("런던 브리타니아 인터내셔널 호텔: " + LocationUtil.requestKeywordSearch(location4));
+        assertThat(LocationUtil.requestKeywordSearch(location1)).isEqualTo("청와대 본관");
+        assertThat(LocationUtil.requestKeywordSearch(location2)).isEqualTo("백악관");
+        assertThat(LocationUtil.requestKeywordSearch(location3)).isEqualTo("북한산둘레길 6구간평창마을길");
+        assertThat(LocationUtil.requestKeywordSearch(location4)).isEqualTo(location4);
+
 
     }
 
