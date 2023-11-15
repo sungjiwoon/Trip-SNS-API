@@ -190,9 +190,7 @@ public class ItineraryService {
 
         //1. 해당 트립에, 삭제할 아이디들이 일단 존재하는지 확인.
         for (Long id : deleteIdList) {
-            Itinerary it = itineraryRepository
-                .findById(id)
-                .orElseThrow(() -> new ItineraryException(NO_ITINERARY));
+            Itinerary it = getItinerary(id);
             if (it.getTrip().getTripId() != tripId) {
                 throw new ItineraryException(NO_ITINERARY);
             }
@@ -205,9 +203,7 @@ public class ItineraryService {
 
         //2. 여정들 가져오기 (id만 적힌것들) -> delete 처리
         for (Long id : deleteIdList) {
-            Itinerary it = itineraryRepository
-                .findById(id)
-                .orElseThrow(() -> new ItineraryException(NO_ITINERARY));
+            Itinerary it = getItinerary(id);
             it.delete();
             Itinerary saveIt = itineraryRepository.save(it);
             if (saveIt == null) {
@@ -219,6 +215,13 @@ public class ItineraryService {
         //3. 남은 여정들의 순서 재정의 - 여정 순서대로 entity 정렬
         sortAgainItineraryOrder(getItineraryList(getTrip(tripId)));
         return deleteItList;
+    }
+
+    private Itinerary getItinerary(Long id) {
+        Itinerary it = itineraryRepository
+            .findById(id)
+            .orElseThrow(() -> new ItineraryException(NO_ITINERARY));
+        return it;
     }
 
     /**
@@ -246,8 +249,7 @@ public class ItineraryService {
         }
 
         for (ItineraryUpdateRequest req : itineraryUpdateRequests) {
-            Itinerary itinerary = itineraryRepository.findById(req.getItineraryId())
-                .orElseThrow(() -> new ItineraryException(NO_ITINERARY));
+            Itinerary itinerary = getItinerary(req.getItineraryId());
 
             if (!map.containsKey(req.getItineraryId())) {
                 throw new ItineraryException(ITINERARY_NOT_MATCH_TRIP);
