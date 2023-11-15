@@ -1,9 +1,7 @@
 package com.fastcampus.toyproject.domain.liketrip.entity;
 
-import com.fastcampus.toyproject.common.BaseTimeEntity;
 import com.fastcampus.toyproject.domain.trip.entity.Trip;
 import com.fastcampus.toyproject.domain.user.entity.User;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
@@ -12,7 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,6 +19,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class LikeTrip {
 
@@ -43,8 +41,7 @@ public class LikeTrip {
     @Comment("좋아요 여부")
     private Boolean isLike;
 
-    @Embedded
-    private BaseTimeEntity baseTimeEntity;
+
 
     public LikeTrip(User user, Trip trip, Boolean isLike) {
         this.user = user;
