@@ -21,8 +21,8 @@ public class MovementResponse extends ItineraryResponse {
     private String departurePlace;
     private String arrivalPlace;
     private String timeDifference;
-    private String departureLocation;
-    private String arrivalLocation;
+    private String departurePlaceInfo;
+    private String arrivalPlaceInfo;
 
     public static MovementResponse fromEntity(Movement entity) {
         return MovementResponse
@@ -37,8 +37,8 @@ public class MovementResponse extends ItineraryResponse {
             .arrivalPlace(entity.getArrivalPlace())
             .timeDifference(
                 DateUtil.getTimeBetweenDate(entity.getDepartureDate(), entity.getArrivalDate()))
-            .departureLocation(LocationUtil.requestKeywordSearch(entity.getDeparturePlace()))
-            .arrivalLocation(LocationUtil.requestKeywordSearch(entity.getArrivalPlace()))
+            .departurePlaceInfo(entity.getDeparturePlaceInfo())
+            .arrivalPlaceInfo(entity.getArrivalPlaceInfo())
             .build();
     }
 }

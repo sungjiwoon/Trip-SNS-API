@@ -280,7 +280,7 @@ class TripServiceTest {
                 .usingRecursiveComparison()
                 .isEqualTo(tripResponse);
         }
-        
+
         @Test
         @DisplayName("여행 수정 성공")
         void updateTrip_success(){
