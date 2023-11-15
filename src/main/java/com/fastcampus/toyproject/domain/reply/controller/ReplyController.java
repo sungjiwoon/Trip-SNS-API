@@ -6,9 +6,11 @@ import com.fastcampus.toyproject.domain.reply.dto.ReplyRequestDTO;
 import com.fastcampus.toyproject.domain.reply.dto.ReplyResponseDTO;
 import com.fastcampus.toyproject.domain.reply.service.ReplyService;
 import java.util.List;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,5 +42,30 @@ public class ReplyController {
         return ResponseDTO.ok("댓글 성공적으로 조회되었습니다.", replies);
     }
 
+    @PutMapping("/{replyId}")
+    public ResponseDTO<ReplyResponseDTO> updateReply(
+        @PathVariable Long tripId,
+        @PathVariable Long replyId,
 
+        @RequestBody ReplyRequestDTO request
+
+    ) {
+
+        ReplyResponseDTO updatedReply = replyService.updateReply(replyId, request.getContent());
+        return ResponseDTO.ok("댓글이 성공적으로 수정되었습니다.", updatedReply);
+    }
+
+    @DeleteMapping("/{replyId}")
+    public ResponseDTO<Void> deleteReply(
+        @PathVariable Long tripId,
+        @PathVariable Long replyId
+
+    ) {
+
+        replyService.deleteReply(replyId);
+        return ResponseDTO.ok("댓글이 성공적으로 삭제되었습니다.");
+    }
 }
+
+
+

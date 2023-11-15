@@ -48,4 +48,9 @@ public class Reply {
     @Embedded
     private BaseTimeEntity baseTimeEntity;
 
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+
 }

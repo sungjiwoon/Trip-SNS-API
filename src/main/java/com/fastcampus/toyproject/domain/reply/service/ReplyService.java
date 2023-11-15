@@ -7,12 +7,15 @@ import static com.fastcampus.toyproject.domain.trip.exception.TripExceptionCode.
 import com.fastcampus.toyproject.common.BaseTimeEntity;
 import com.fastcampus.toyproject.domain.reply.dto.ReplyResponseDTO;
 import com.fastcampus.toyproject.domain.reply.entity.Reply;
+import com.fastcampus.toyproject.domain.reply.exception.ReplyException;
+import com.fastcampus.toyproject.domain.reply.exception.ReplyExceptionCode;
 import com.fastcampus.toyproject.domain.reply.repository.ReplyRepository;
 import com.fastcampus.toyproject.domain.trip.entity.Trip;
 import com.fastcampus.toyproject.domain.trip.exception.TripException;
 import com.fastcampus.toyproject.domain.trip.service.TripService;
 import com.fastcampus.toyproject.domain.user.entity.User;
 import com.fastcampus.toyproject.domain.user.service.UserService;
+import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -26,13 +29,14 @@ public class ReplyService {
     private final TripService tripService;
     private final UserService userService;
 
-    public ReplyService(ReplyRepository replyRepository, TripService tripService, UserService userService) {
+    public ReplyService(ReplyRepository replyRepository, TripService tripService,
+        UserService userService) {
         this.replyRepository = replyRepository;
         this.tripService = tripService;
         this.userService = userService;
     }
-    public static ReplyResponseDTO fromEntity(Reply reply) {
 
+    public static ReplyResponseDTO fromEntity(Reply reply) {
 
         return ReplyResponseDTO.builder()
             .replyId(reply.getReplyId())
@@ -67,6 +71,25 @@ public class ReplyService {
         return replies.stream()
             .map(ReplyResponseDTO::fromEntity)
             .collect(Collectors.toList());
+    }
+
+    public ReplyResponseDTO updateReply(Long replyId, String content) {
+        Reply reply = replyRepository.findById(replyId)
+            .orElseThrow(() -> new ReplyException(ReplyExceptionCode.REPLY_NOT_FOUND));
+
+        reply.setContent(content);
+        Reply updatedReply = replyRepository.save(reply);
+        return ReplyResponseDTO.fromEntity(updatedReply);
+    }
+
+    public void deleteReply(Long replyId) {
+        Reply reply = replyRepository.findById(replyId)
+            .orElseThrow(() -> new ReplyException(ReplyExceptionCode.REPLY_NOT_FOUND));
+
+        if (reply.getBaseTimeEntity().getDeletedAt() == null) {
+            reply.getBaseTimeEntity().delete(LocalDateTime.now());
+            replyRepository.save(reply);
+        }
     }
 
 
