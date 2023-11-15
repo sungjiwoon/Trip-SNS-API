@@ -46,23 +46,20 @@ public class ReplyController {
     public ResponseDTO<ReplyResponseDTO> updateReply(
         @PathVariable Long tripId,
         @PathVariable Long replyId,
-
-        @RequestBody ReplyRequestDTO request
-
+        @RequestBody ReplyRequestDTO request,
+        final UserPrincipal userPrincipal
     ) {
-
-        ReplyResponseDTO updatedReply = replyService.updateReply(replyId, request.getContent());
+        ReplyResponseDTO updatedReply = replyService.updateReply(userPrincipal.getUserId(), replyId, request.getContent());
         return ResponseDTO.ok("댓글이 성공적으로 수정되었습니다.", updatedReply);
     }
 
     @DeleteMapping("/{replyId}")
     public ResponseDTO<Void> deleteReply(
         @PathVariable Long tripId,
-        @PathVariable Long replyId
-
+        @PathVariable Long replyId,
+        final UserPrincipal userPrincipal
     ) {
-
-        replyService.deleteReply(replyId);
+        replyService.deleteReply(userPrincipal.getUserId(), replyId);
         return ResponseDTO.ok("댓글이 성공적으로 삭제되었습니다.");
     }
 }

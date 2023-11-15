@@ -1,13 +1,21 @@
 package com.fastcampus.toyproject.domain.reply.exception;
 
-public class ReplyException extends RuntimeException {
+import com.fastcampus.toyproject.common.exception.DefaultException;
+import com.fastcampus.toyproject.common.exception.ExceptionCode;
+import lombok.Getter;
 
-    private final ReplyExceptionCode code;
+@Getter
+public class ReplyException extends DefaultException {
 
-    public ReplyException(ReplyExceptionCode code) {
-        super(code.getMessage());
-        this.code = code;
+    ExceptionCode exceptionCode;
+    String errorMsg;
+
+    public ReplyException(ReplyExceptionCode exceptionCode) {
+        super(exceptionCode);
+        this.exceptionCode = exceptionCode;
+        this.errorMsg = exceptionCode.getMsg();
     }
+
 
 
 }

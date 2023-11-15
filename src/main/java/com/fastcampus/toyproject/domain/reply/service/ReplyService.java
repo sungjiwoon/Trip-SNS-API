@@ -73,24 +73,31 @@ public class ReplyService {
             .collect(Collectors.toList());
     }
 
-    public ReplyResponseDTO updateReply(Long replyId, String content) {
+    public ReplyResponseDTO updateReply(Long userId, Long replyId, String content) {
         Reply reply = replyRepository.findById(replyId)
             .orElseThrow(() -> new ReplyException(ReplyExceptionCode.REPLY_NOT_FOUND));
+
+        if (reply.getUser() == null || !reply.getUser().getUserId().equals(userId)) {
+            throw new ReplyException(ReplyExceptionCode.INVALID_REPLY_OPERATION);
+        }
 
         reply.setContent(content);
         Reply updatedReply = replyRepository.save(reply);
         return ReplyResponseDTO.fromEntity(updatedReply);
     }
 
-    public void deleteReply(Long replyId) {
+    public void deleteReply(Long userId, Long replyId) {
         Reply reply = replyRepository.findById(replyId)
             .orElseThrow(() -> new ReplyException(ReplyExceptionCode.REPLY_NOT_FOUND));
+
+        if (reply.getUser() == null || !reply.getUser().getUserId().equals(userId)) {
+            throw new ReplyException(ReplyExceptionCode.INVALID_REPLY_OPERATION);
+        }
 
         if (reply.getBaseTimeEntity().getDeletedAt() == null) {
             reply.getBaseTimeEntity().delete(LocalDateTime.now());
             replyRepository.save(reply);
         }
     }
-
 
 }
