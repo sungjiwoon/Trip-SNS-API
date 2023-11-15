@@ -2,7 +2,6 @@ package com.fastcampus.toyproject.domain.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -15,14 +14,12 @@ import com.fastcampus.toyproject.domain.user.exception.UserException;
 import com.fastcampus.toyproject.domain.user.repository.RefreshTokenRepository;
 import com.fastcampus.toyproject.domain.user.repository.UserRepository;
 import com.fastcampus.toyproject.domain.user.service.UserService;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -48,8 +45,9 @@ public class userServiceTest {
     private UserRequestDTO userRequestDTO;
 
     private User user;
+
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
 
         userRequestDTO = new UserRequestDTO(
             "test@test.co.kr",
@@ -75,10 +73,11 @@ public class userServiceTest {
 
     @Nested
     @DisplayName("회원가입 테스트")
-    class insertUser{
+    class insertUser {
+
         @Test
         @DisplayName("회원가입 성공")
-        public void insertUser_success(){
+        public void insertUser_success() {
 
             //given 주어진 변수들
             //when
@@ -99,7 +98,7 @@ public class userServiceTest {
 
         @Test
         @DisplayName("중복 된 이메일")
-        public void inserUser_existed(){
+        public void inserUser_existed() {
 
             //given 주어진 변수들
             //when
