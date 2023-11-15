@@ -76,7 +76,7 @@ public class TripController {
     @PostMapping()
     public ResponseDTO<TripResponse> insertTrip(
 
-        final UserPrincipal userPrincipal,
+        UserPrincipal userPrincipal,
 
         @Valid @RequestBody final TripRequest tripRequest
     ) {
@@ -121,7 +121,7 @@ public class TripController {
     @DeleteMapping("/{tripId}")
 
     public ResponseDTO<Void> deleteTrip(
-        final UserPrincipal userPrincipal,
+        UserPrincipal userPrincipal,
         @PathVariable final Long tripId
     ) {
         Long userId = userPrincipal.getUserId();
