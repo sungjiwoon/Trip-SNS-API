@@ -17,6 +17,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 //내장 DB에 테스트를 진행 하기 위에 아래와 같은 어노테이션을 작성해 줍니다.
 //application.yml의 외장 mysql이 아닌 내장 h2 db를 사용하게 됩니다.
 @AutoConfigureTestDatabase(replace = Replace.NONE)
+@DisplayName("사용자 리포지토리 테스트")
 public class UserRepositoryTest {
 
     @Autowired

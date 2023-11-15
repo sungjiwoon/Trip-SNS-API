@@ -23,13 +23,18 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
+//내장 DB에 테스트를 진행 하기 위에 아래와 같은 어노테이션을 작성해 줍니다.
+//application.yml의 외장 mysql이 아닌 내장 h2 db를 사용하게 됩니다.
+@AutoConfigureTestDatabase(replace = Replace.NONE)
 @DisplayName("사용자 서비스 테스트")
-public class userServiceTest {
+public class UserServiceTest {
 
     //테스트를 할 대상입니다.
     //UserService 테스트는 여러 객체를 주입받아야 하는데
