@@ -61,11 +61,11 @@ public class TripController {
     public ResponseDTO<List<TripResponse>> searchTripListByKeyword(
             @Valid @RequestParam("keyword")
             @NotBlank(message = "검색어를 채워주세요")
-            @Length(min = 1, max = 10, message = "검색어는 한 글자 이상이어야 합니다.")
+            @Length(min = 1, max = 15, message = "검색어는 한 글자 이상이어야 합니다.")
             final String keyword
     ) {
         log.info("keyword : {}", keyword);
-        Optional<List<TripResponse>> optional = tripService.getTripByKeyword(keyword);
+        Optional<List<TripResponse>> optional = tripService.getTripByKeyword(keyword.trim());
         if (optional.get().size() == 0) {
             return ResponseDTO.ok("검색된 여행이 없습니다.", optional.get());
         }
