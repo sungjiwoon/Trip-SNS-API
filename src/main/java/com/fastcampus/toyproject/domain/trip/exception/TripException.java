@@ -9,11 +9,8 @@ import lombok.Getter;
 public class TripException extends DefaultException {
 
     ExceptionCode errorCode;
-    String errorMsg;
 
     public TripException(TripExceptionCode errorCode) {
-        super();
-        this.errorCode = errorCode;
-        this.errorMsg = errorCode.getMsg();
+        super(errorCode);
     }
 }
