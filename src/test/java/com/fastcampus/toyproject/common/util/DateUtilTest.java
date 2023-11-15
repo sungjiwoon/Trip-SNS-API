@@ -29,7 +29,7 @@ class DateUtilTest {
 
             DateUtil.isStartDateEarlierThanEndDate(endD, startD);
         } catch (DefaultException e) {
-            System.out.println(e.getErrorCode() + ": " + e.getErrorMsg());
+            System.out.println(e.getErrorCode() + ": " );
         }
     }
 
@@ -42,7 +42,7 @@ class DateUtilTest {
             //DateUtil.isStartDateEarlierThanEndDate(startDt, endDt);
             DateUtil.isStartDateEarlierThanEndDate(endDt, startDt);
         } catch (DefaultException e) {
-            System.out.println(e.getErrorCode() + ": " + e.getErrorMsg());
+            System.out.println(e.getErrorCode() + ": " );
         }
     }
 

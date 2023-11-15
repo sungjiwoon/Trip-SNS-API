@@ -15,8 +15,6 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 public class LodgementResponse extends ItineraryResponse {
 
-    private static LocationUtil locationUtil = new LocationUtil();
-
     private String location;
     private LocalDateTime checkIn;
     private LocalDateTime checkOut;
@@ -27,7 +25,7 @@ public class LodgementResponse extends ItineraryResponse {
             .builder()
             .id(entity.getItineraryId())
             .itineraryName(entity.getItineraryName())
-            .location(locationUtil.findLocation(entity.getItineraryName()))
+            .location(LocationUtil.requestKeywordSearch(entity.getItineraryName()))
             .itineraryOrder(entity.getItineraryOrder())
             .itineraryType(entity.getItineraryType())
             .checkIn(entity.getCheckIn())
