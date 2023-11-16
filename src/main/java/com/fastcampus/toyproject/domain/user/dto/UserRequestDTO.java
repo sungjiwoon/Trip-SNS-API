@@ -6,10 +6,12 @@ import com.fastcampus.toyproject.domain.user.entity.User;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class UserRequestDTO {
 
     @NotNull(message = "이메일을 입력하셔야 합니다.")
