@@ -5,8 +5,12 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import com.fastcampus.toyproject.common.BaseTimeEntity;
 import com.fastcampus.toyproject.config.security.jwt.TokenProvider;
 import com.fastcampus.toyproject.domain.liketrip.service.LikeTripService;
+import com.fastcampus.toyproject.domain.trip.dto.TripDetailResponse;
+import com.fastcampus.toyproject.domain.trip.dto.TripResponse;
+import com.fastcampus.toyproject.domain.trip.entity.Trip;
 import com.fastcampus.toyproject.domain.trip.service.TripService;
 import com.fastcampus.toyproject.domain.user.dto.UserRequestDTO;
 import com.fastcampus.toyproject.domain.user.dto.UserResponseDTO;
@@ -17,6 +21,8 @@ import com.fastcampus.toyproject.domain.user.exception.UserExceptionCode;
 import com.fastcampus.toyproject.domain.user.repository.RefreshTokenRepository;
 import com.fastcampus.toyproject.domain.user.repository.UserRepository;
 import com.fastcampus.toyproject.domain.user.service.UserService;
+import java.time.LocalDate;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -59,6 +65,8 @@ public class UserServiceTest {
     //자주 사용하는 변수들은 다음과 같이 미리 선언하여 반복을 줄입니다.
     private UserRequestDTO userRequestDTO;
     private User user;
+    private Trip trip;
+
 
     //자주 사용할 변수들을 매 테스트 마다 만들도록 합니다.
     @BeforeEach
@@ -89,15 +97,25 @@ public class UserServiceTest {
             likeTripService
         );
 
+        trip = Trip.builder()
+            .tripId(1L)
+            .tripName("일본여행")
+            .startDate(LocalDate.now())
+            .endDate(LocalDate.now())
+            .baseTimeEntity(new BaseTimeEntity())
+            .isDomestic(true)
+            .itineraryList(List.of())
+            .user(user)
+            .build();
     }
 
     //비슷한 테스트 케이스별로 이너클래스로 나눕니다.
     @Nested
-    @DisplayName("회원가입 테스트")
+    @DisplayName("회원 가입 테스트")
     class insertUser {
 
         @Test
-        @DisplayName("회원가입 성공")
+        @DisplayName("회원 가입 성공")
         public void insertUser_success() {
 
             //given 주어진 변수들
@@ -122,7 +140,7 @@ public class UserServiceTest {
 
 
         @Test
-        @DisplayName("중복 된 이메일")
+        @DisplayName("중복된 이메일")
         public void inserUser_existed() {
 
             //given 주어진 변수들
@@ -135,11 +153,41 @@ public class UserServiceTest {
             //Assertions.assertThatExceptionOfType 으로 확인 합니다.
             assertThatExceptionOfType(UserException.class)
                 .isThrownBy(() -> userService.insertUser(userRequestDTO))
-                .withMessage("중복 된 이메일이 있습니다.")
+                .withMessage("중복된 이메일이 있습니다.")
                 .extracting("errorCode") //errorCode 필드를 확인합니다.
                 .isEqualTo(UserExceptionCode.EXSITED_EMAIL);
 
 
+        }
+    }
+
+//    @Nested
+    @DisplayName("사용자 여행 조회")
+    class SelectTrip {
+
+//        @Test
+        @DisplayName("전체 여행 조회")
+        public void getAllTrip_success() {
+
+            assertThat(userService.getAllTrip(1l))
+                .usingRecursiveComparison()
+                .isEqualTo(List.of(TripResponse.fromEntity(trip)));
+        }
+
+//        @Test
+        @DisplayName("상세 여행 조회")
+        public void getDetailTrip_success() {
+            assertThat(userService.getDetailTrip(1l,1l))
+                .usingRecursiveComparison()
+                .isEqualTo(TripDetailResponse.fromEntity(trip));
+        }
+
+//        @Test
+        @DisplayName("좋아요 여행 조회")
+        public void getLikeTrip_success() {
+            assertThat(userService.getLikeTrip(1l))
+                .usingRecursiveComparison()
+                .isEqualTo(List.of(TripResponse.fromEntity(trip)));
         }
     }
 

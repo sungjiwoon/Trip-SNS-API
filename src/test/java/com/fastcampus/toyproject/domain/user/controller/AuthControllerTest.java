@@ -1,22 +1,15 @@
 package com.fastcampus.toyproject.domain.user.controller;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fastcampus.toyproject.domain.user.dto.LoginDto;
-import com.fastcampus.toyproject.domain.user.dto.TokenDto;
-import com.fastcampus.toyproject.domain.user.dto.TokenRequestDto;
 import com.fastcampus.toyproject.domain.user.dto.UserRequestDTO;
-import com.fastcampus.toyproject.domain.user.dto.UserResponseDTO;
-import com.fastcampus.toyproject.domain.user.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.servlet.http.HttpServletResponse;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,6 +19,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest
 @AutoConfigureMockMvc
+@DisplayName("AuthController 테스트")
 class AuthControllerTest {
 
     @Autowired
@@ -49,7 +43,8 @@ class AuthControllerTest {
     );
 
     @Test
-    public void 회원가입() throws Exception {
+    @DisplayName("회원 가입")
+    public void join_success() throws Exception {
         mockMvc.perform(post("/auth/join")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(userRequestDTO)))
@@ -59,7 +54,8 @@ class AuthControllerTest {
     }
 
     @Test
-    public void 회원가입_후_로그인() throws Exception {
+    @DisplayName("회원 가입 후 로그인")
+    public void login_success() throws Exception {
         authController.insert(userRequestDTO);
 
         HttpServletResponse response = new MockHttpServletResponse();
