@@ -6,6 +6,7 @@ import com.fastcampus.toyproject.domain.reply.dto.ReplyRequestDTO;
 import com.fastcampus.toyproject.domain.reply.dto.ReplyResponseDTO;
 import com.fastcampus.toyproject.domain.reply.service.ReplyService;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +30,7 @@ public class ReplyController {
     public ResponseDTO<ReplyResponseDTO> addReply(
         @PathVariable Long tripId,
         final UserPrincipal userPrincipal,
-        @RequestBody ReplyRequestDTO request
+        @Valid @RequestBody final ReplyRequestDTO request
     ) {
         Long userId = userPrincipal.getUserId();
         ReplyResponseDTO reply = replyService.addReply(userId, tripId, request.getContent());
@@ -46,7 +47,7 @@ public class ReplyController {
     public ResponseDTO<ReplyResponseDTO> updateReply(
         @PathVariable Long tripId,
         @PathVariable Long replyId,
-        @RequestBody ReplyRequestDTO request,
+        @Valid @RequestBody final ReplyRequestDTO request,
         final UserPrincipal userPrincipal
     ) {
         ReplyResponseDTO updatedReply = replyService.updateReply(userPrincipal.getUserId(), replyId, request.getContent());
