@@ -6,6 +6,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import com.fastcampus.toyproject.config.security.jwt.TokenProvider;
+import com.fastcampus.toyproject.domain.liketrip.service.LikeTripService;
+import com.fastcampus.toyproject.domain.trip.service.TripService;
 import com.fastcampus.toyproject.domain.user.dto.UserRequestDTO;
 import com.fastcampus.toyproject.domain.user.dto.UserResponseDTO;
 import com.fastcampus.toyproject.domain.user.entity.Authority;
@@ -30,9 +32,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
-//내장 DB에 테스트를 진행 하기 위에 아래와 같은 어노테이션을 작성해 줍니다.
-//application.yml의 외장 mysql이 아닌 내장 h2 db를 사용하게 됩니다.
-@AutoConfigureTestDatabase(replace = Replace.NONE)
 @DisplayName("사용자 서비스 테스트")
 public class UserServiceTest {
 
@@ -48,6 +47,12 @@ public class UserServiceTest {
     private TokenProvider tokenProvider;
     @Autowired
     private RefreshTokenRepository refreshTokenRepository;
+
+    /*UserService가 늘어나면서 테스트 할 때 쓸모 없는 부분도 늘어났네요*/
+    @Autowired
+    private TripService tripService;
+    @Autowired
+    private LikeTripService likeTripService;
     @Mock
     private UserRepository userRepository;
 
@@ -79,7 +84,9 @@ public class UserServiceTest {
             userRepository,
             passwordEncoder,
             tokenProvider,
-            refreshTokenRepository
+            refreshTokenRepository,
+            tripService,
+            likeTripService
         );
 
     }

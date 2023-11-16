@@ -15,4 +15,10 @@ public interface TripRepository extends JpaRepository<Trip, Long> {
     Optional<Trip> findByTripIdAndItineraryDeletedIsFalse(@Param("tripId") Long tripId);
 
     Optional<List<Trip>> findByTripNameContains(String keyword);
+
+    @Query("SELECT t FROM Trip t WHERE t.user.userId = :userId")
+    Optional<List<Trip>> findAllByUser(@Param("userId") Long userId);
+
+    @Query("SELECT t FROM Trip t WHERE t.tripId = :tripId AND t.user.userId = :userId")
+    Optional<Trip> findByTripIdAndUserId(@Param("tripId") Long tripId, @Param("userId") Long userId);
 }
