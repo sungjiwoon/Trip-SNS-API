@@ -1,5 +1,6 @@
 package com.fastcampus.toyproject.domain.itinerary.entity;
 
+import com.fastcampus.toyproject.common.util.LocationUtil;
 import com.fastcampus.toyproject.domain.itinerary.dto.ItineraryUpdateRequest;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -28,17 +29,13 @@ public class Lodgement extends Itinerary {
     @Comment("위치 정보")
     private String placeInfo;
 
-    @Comment("위도")
-    private Double lat;
-
-    @Comment("경도")
-    private Double lng;
 
     public void updateLodgement(ItineraryUpdateRequest req) {
         super.updateItineraryName(req.getName());
         super.updateItineraryOrder(req.getOrder());
         this.checkIn = req.getStartDate();
         this.checkOut = req.getEndDate();
+        this.placeInfo = LocationUtil.requestKeywordSearch(req.getName());
     }
 
 }
