@@ -36,7 +36,7 @@ public class ItineraryFactory {
                     .departurePlace(ir.getDeparturePlace())
                     .arrivalPlace(ir.getArrivalPlace())
                     .departurePlaceInfo(LocationUtil.requestKeywordSearch(ir.getDeparturePlace()))
-                    .arrivalPlace(LocationUtil.requestKeywordSearch(ir.getArrivalPlace()))
+                    .arrivalPlaceInfo(LocationUtil.requestKeywordSearch(ir.getArrivalPlace()))
                     .baseTimeEntity(new BaseTimeEntity())
                     .build();
             }
