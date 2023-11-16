@@ -35,7 +35,19 @@
 
 - 실제 코딩을 한 리포지토리 입니다. GitHub Repository [link:GitHub](https://github.com/FC-BE-ToyProject-Team6/KDT_Y_BE_Toy_Project3_DEV)
 - 코드 리뷰를 통해 적극적으로 의견 표출 [link:코드 리뷰](https://github.com/FC-BE-ToyProject-Team6/KDT_Y_BE_Toy_Project3_DEV/pulls?q=is%3Apr+is%3Aclosed)
+
 - - -
+
+### 주요 프로젝트 기획
+
+- 이전 프로젝트 피드백 
+![img_4.png](img_4.png)
+
+- 사용자 플로우 차트를 이용한 프로젝트 기획
+![img_3.png](img_3.png)
+
+- API 엔트포인트를 미리 기획하여 구현
+- 작업을 분류별로 나누어 협업
 
 ### API EndPoint
 
