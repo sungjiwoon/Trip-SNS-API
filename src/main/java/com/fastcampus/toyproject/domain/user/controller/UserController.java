@@ -23,9 +23,7 @@ public class UserController {
     @GetMapping("/trip-list")
     public ResponseDTO<List<TripResponse>> getAllTrip(
         final UserPrincipal userPrincipal) {
-        return userService.getAllTrip(userPrincipal.getUserId())
-            .map(tripResponses -> ResponseDTO.ok("사용자 여행 검색 완료", tripResponses))
-            .orElse(ResponseDTO.ok("검색된 여행이 없습니다.", Collections.emptyList()));
+        return ResponseDTO.ok("사용자 여행 검색 완료", userService.getAllTrip(userPrincipal.getUserId()));
     }
 
     @GetMapping("/trip-detail/{tripId}")
