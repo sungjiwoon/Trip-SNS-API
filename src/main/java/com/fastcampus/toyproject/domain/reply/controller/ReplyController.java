@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/trip/{tripId}/reply")
+@RequestMapping("/api/trip/{tripId}/reply")
 public class ReplyController {
 
     private final ReplyService replyService;
