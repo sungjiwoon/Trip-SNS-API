@@ -111,5 +111,9 @@ public class Trip {
         this.likesCount = likesCount;
     }
 
+    public void setTripId(Long tripId) {
+        this.tripId = tripId;
+    }
+
 
 }
