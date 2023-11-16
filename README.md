@@ -1,4 +1,4 @@
- 6조 FastCampus ToyProject 2
+ 6조 FastCampus ToyProject 
 =======================
 
 6조 토이프로젝트 입니다.
@@ -34,7 +34,8 @@
 ### 프로젝트 진행
 
 - 실제 코딩을 한 리포지토리 입니다. GitHub Repository [link:GitHub](https://github.com/FC-BE-ToyProject-Team6/KDT_Y_BE_Toy_Project3_DEV)
-- 코드 리뷰를 통해 적극적으로 의견 표출 [link:코드 리뷰](https://github.com/FC-BE-ToyProject-Team6/KDT_Y_BE_Toy_Project3_DEV/pulls?q=is%3Apr+is%3Aclosed)
+- 코드 리뷰를 통해 적극적으로 의견 표출 [link:코드 리뷰 3차](https://github.com/FC-BE-ToyProject-Team6/KDT_Y_BE_Toy_Project3_DEV/pulls?q=is%3Apr+is%3Aclosed), [link:코드 리뷰 2차](https://github.com/FC-BE-ToyProject-Team6/KDT_Y_BE_Toy_Project2_DEV/pulls?q=is%3Apr+is%3Aclosed)
+
 
 - - -
 
