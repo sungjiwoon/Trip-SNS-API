@@ -7,13 +7,14 @@ import com.fastcampus.toyproject.domain.liketrip.repository.LikeTripRepository;
 import com.fastcampus.toyproject.domain.trip.entity.Trip;
 import com.fastcampus.toyproject.domain.trip.service.TripService;
 import com.fastcampus.toyproject.domain.user.entity.User;
-import com.fastcampus.toyproject.domain.user.service.UserService;
+import com.fastcampus.toyproject.domain.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,7 +33,7 @@ public class LikeTripServiceTest {
     private TripService tripService;
 
     @Mock
-    private UserService userService;
+    private UserRepository userRepository;
 
     @BeforeEach
     public void setUp() {
@@ -44,13 +45,12 @@ public class LikeTripServiceTest {
     public void testToggleLike_NewLike() {
         Long userId = 1L;
         Long tripId = 1L;
-        User user = new User();
         Trip trip = new Trip();
         trip.setTripId(tripId);
         LikeTripRequest request = new LikeTripRequest();
         request.setTripId(tripId);
 
-        when(userService.getUser(userId)).thenReturn(user);
+        when(userRepository.findById(userId)).thenReturn(Optional.of(new User()));
         when(tripService.getTripByTripId(tripId)).thenReturn(trip);
         when(likeTripRepository.findByUserUserIdAndTripTripId(userId, tripId)).thenReturn(
             Optional.empty());
@@ -71,15 +71,14 @@ public class LikeTripServiceTest {
     public void testToggleLike_ExistingLike() {
         Long userId = 1L;
         Long tripId = 1L;
-        User user = new User();
         Trip trip = new Trip();
         trip.setTripId(tripId);
-        LikeTrip existingLike = new LikeTrip(user, trip, true);
+        LikeTrip existingLike = new LikeTrip(new User(), trip, true);
         existingLike.setTrip(trip);
         LikeTripRequest request = new LikeTripRequest();
         request.setTripId(tripId);
 
-        when(userService.getUser(userId)).thenReturn(user);
+        when(userRepository.findById(userId)).thenReturn(Optional.of(new User()));
         when(tripService.getTripByTripId(tripId)).thenReturn(trip);
         when(likeTripRepository.findByUserUserIdAndTripTripId(userId, tripId)).thenReturn(
             Optional.of(existingLike));
@@ -94,5 +93,4 @@ public class LikeTripServiceTest {
         assertEquals(tripId, response.getTripId());
         assertEquals(false, response.getIsLike());
     }
-
 }
