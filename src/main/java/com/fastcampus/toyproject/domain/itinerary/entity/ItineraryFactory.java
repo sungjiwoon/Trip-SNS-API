@@ -5,6 +5,7 @@ import static com.fastcampus.toyproject.domain.itinerary.exception.ItineraryExce
 import static com.fastcampus.toyproject.domain.itinerary.exception.ItineraryExceptionCode.EMPTY_TRANSPORTATION;
 
 import com.fastcampus.toyproject.common.BaseTimeEntity;
+import com.fastcampus.toyproject.common.util.LocationUtil;
 import com.fastcampus.toyproject.domain.itinerary.dto.ItineraryRequest;
 import com.fastcampus.toyproject.domain.itinerary.exception.ItineraryException;
 import com.fastcampus.toyproject.domain.itinerary.exception.ItineraryExceptionCode;
@@ -34,6 +35,8 @@ public class ItineraryFactory {
                     .arrivalDate(ir.getEndDate())
                     .departurePlace(ir.getDeparturePlace())
                     .arrivalPlace(ir.getArrivalPlace())
+                    .departurePlaceInfo(LocationUtil.requestKeywordSearch(ir.getDeparturePlace()))
+                    .arrivalPlaceInfo(LocationUtil.requestKeywordSearch(ir.getArrivalPlace()))
                     .baseTimeEntity(new BaseTimeEntity())
                     .build();
             }
@@ -47,6 +50,7 @@ public class ItineraryFactory {
                 .itineraryType(ir.getType())
                 .checkIn(ir.getStartDate())
                 .checkOut(ir.getEndDate())
+                .placeInfo(LocationUtil.requestKeywordSearch(ir.getName()))
                 .baseTimeEntity(new BaseTimeEntity())
                 .build()
         );
@@ -59,6 +63,7 @@ public class ItineraryFactory {
                 .itineraryType(ir.getType())
                 .departureDate(ir.getStartDate())
                 .arrivalDate(ir.getEndDate())
+                .placeInfo(LocationUtil.requestKeywordSearch(ir.getName()))
                 .baseTimeEntity(new BaseTimeEntity())
                 .build()
         );
