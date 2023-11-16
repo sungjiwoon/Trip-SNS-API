@@ -7,13 +7,13 @@ import com.fastcampus.toyproject.domain.trip.repository.TripRepository;
 import com.fastcampus.toyproject.domain.user.entity.Authority;
 import com.fastcampus.toyproject.domain.user.entity.User;
 import com.fastcampus.toyproject.domain.user.repository.UserRepository;
-import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -42,7 +42,6 @@ public class LikeTripRepositoryTest {
             .password("password")
             .name("Test User")
             .authority(Authority.ROLE_USER)
-            .baseTimeEntity(new BaseTimeEntity())
             .build();
         userRepository.save(user);
 
@@ -52,7 +51,6 @@ public class LikeTripRepositoryTest {
             .endDate(LocalDate.now().plusDays(1))
             .isDomestic(true)
             .user(user)
-            .baseTimeEntity(new BaseTimeEntity())
             .build();
         tripRepository.save(trip);
 
