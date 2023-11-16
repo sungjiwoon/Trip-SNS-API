@@ -1,7 +1,6 @@
 package com.fastcampus.toyproject.domain.itinerary.dto;
 
 import com.fastcampus.toyproject.common.util.DateUtil;
-import com.fastcampus.toyproject.common.util.LocationUtil;
 import com.fastcampus.toyproject.domain.itinerary.entity.Stay;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -15,18 +14,17 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 public class StayResponse extends ItineraryResponse {
 
-
     private LocalDateTime departureDate;
     private LocalDateTime arrivalDate;
     private String timeDifference;
-    private String location;
+    private String placeInfo;
 
     public static StayResponse fromEntity(Stay entity) {
         return StayResponse
             .builder()
             .id(entity.getItineraryId())
             .itineraryName(entity.getItineraryName())
-            .location(LocationUtil.requestKeywordSearch(entity.getItineraryName()))
+            .placeInfo(entity.getPlaceInfo())
             .itineraryOrder(entity.getItineraryOrder())
             .itineraryType(entity.getItineraryType())
             .departureDate(entity.getDepartureDate())

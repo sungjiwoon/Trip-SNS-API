@@ -2,6 +2,7 @@ package com.fastcampus.toyproject.domain.trip.dto;
 
 import com.fastcampus.toyproject.domain.itinerary.dto.ItineraryResponse;
 import com.fastcampus.toyproject.domain.itinerary.dto.ItineraryResponseFactory;
+import com.fastcampus.toyproject.domain.reply.dto.ReplyResponseDTO;
 import com.fastcampus.toyproject.domain.trip.entity.Trip;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -28,7 +29,9 @@ public class TripDetailResponse {
     private LocalDate startDate;
     private LocalDate endDate;
     private Boolean isDomestic;
+    private Integer likeCount;
     private List<ItineraryResponse> itineraryList;
+    private List<ReplyResponseDTO> replyList;
 
     public static TripDetailResponse fromEntity(Trip trip) {
         return TripDetailResponse.builder()
@@ -38,12 +41,20 @@ public class TripDetailResponse {
             .startDate(trip.getStartDate())
             .endDate(trip.getEndDate())
             .isDomestic(trip.getIsDomestic())
+            .likeCount(trip.getLikesCount())
             .itineraryList(
                 Optional.ofNullable(trip.getItineraryList())
                     .orElse(new ArrayList<>())
                     .stream()
                     .map(ItineraryResponseFactory::getItineraryResponse)
                     .collect(Collectors.toList()))
+            .replyList(Optional.ofNullable(trip.getReplyList())
+                .orElse(new ArrayList<>())
+                .stream()
+                .filter(reply -> reply.getBaseTimeEntity().getDeletedAt() == null)
+                .map(ReplyResponseDTO::fromEntity)
+                .collect(Collectors.toList())
+            )
             .build();
     }
 }

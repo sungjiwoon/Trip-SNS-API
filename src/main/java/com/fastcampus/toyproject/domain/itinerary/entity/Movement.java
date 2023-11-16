@@ -1,5 +1,6 @@
 package com.fastcampus.toyproject.domain.itinerary.entity;
 
+import com.fastcampus.toyproject.common.util.LocationUtil;
 import com.fastcampus.toyproject.domain.itinerary.dto.ItineraryUpdateRequest;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -37,20 +38,9 @@ public class Movement extends Itinerary {
     @Comment("출발지 위치 정보")
     private String departurePlaceInfo;
 
-    @Comment("출발지 위도")
-    private Double departureLat;
-
-    @Comment("출발지 경도")
-    private Double departureLng;
-
     @Comment("도착지 위치 정보")
     private String arrivalPlaceInfo;
 
-    @Comment("도착지 위도")
-    private Double arrivalLat;
-
-    @Comment("도착지 경도")
-    private Double arrivalLng;
 
     public void updateMovement(ItineraryUpdateRequest req) {
         super.updateItineraryName(req.getName());
@@ -59,5 +49,7 @@ public class Movement extends Itinerary {
         this.departurePlace = req.getDeparturePlace();
         this.arrivalDate = req.getEndDate();
         this.arrivalPlace = req.getArrivalPlace();
+        this.departurePlaceInfo = LocationUtil.requestKeywordSearch(req.getDeparturePlace());
+        this.arrivalPlaceInfo = LocationUtil.requestKeywordSearch(req.getArrivalPlace());
     }
 }
