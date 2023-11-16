@@ -1,5 +1,6 @@
 package com.fastcampus.toyproject.domain.user.service;
 
+import static com.fastcampus.toyproject.domain.trip.exception.TripExceptionCode.NO_SUCH_TRIP;
 import static com.fastcampus.toyproject.domain.user.exception.UserExceptionCode.EXSITED_EMAIL;
 import static com.fastcampus.toyproject.domain.user.exception.UserExceptionCode.NO_SUCH_EMAIL;
 import static com.fastcampus.toyproject.domain.user.exception.UserExceptionCode.WRONG_PASSWORD;
@@ -10,6 +11,7 @@ import com.fastcampus.toyproject.domain.liketrip.dto.LikeTripResponse;
 import com.fastcampus.toyproject.domain.liketrip.service.LikeTripService;
 import com.fastcampus.toyproject.domain.trip.dto.TripDetailResponse;
 import com.fastcampus.toyproject.domain.trip.dto.TripResponse;
+import com.fastcampus.toyproject.domain.trip.exception.TripException;
 import com.fastcampus.toyproject.domain.trip.service.TripService;
 import com.fastcampus.toyproject.domain.user.dto.LoginDto;
 import com.fastcampus.toyproject.domain.user.dto.RefreshToken;
@@ -106,8 +108,9 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<List<TripResponse>> getAllTrip(Long userId) {
-        return tripService.getTripByUserId(userId);
+    public List<TripResponse> getAllTrip(Long userId) {
+        return tripService.getTripByUserId(userId)
+            .orElseThrow(() -> new TripException(NO_SUCH_TRIP));
     }
 
     @Transactional(readOnly = true)

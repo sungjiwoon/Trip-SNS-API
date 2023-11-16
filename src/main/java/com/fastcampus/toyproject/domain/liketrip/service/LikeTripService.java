@@ -1,5 +1,9 @@
 package com.fastcampus.toyproject.domain.liketrip.service;
 
+import static com.fastcampus.toyproject.domain.trip.exception.TripExceptionCode.NO_SUCH_TRIP;
+import static com.fastcampus.toyproject.domain.user.exception.UserExceptionCode.NO_LIKE_TRIP;
+import static java.util.Arrays.stream;
+
 import com.fastcampus.toyproject.domain.liketrip.dto.LikeTripRequest;
 import com.fastcampus.toyproject.domain.liketrip.dto.LikeTripResponse;
 import com.fastcampus.toyproject.domain.liketrip.entity.LikeTrip;
@@ -11,6 +15,7 @@ import com.fastcampus.toyproject.domain.trip.exception.TripExceptionCode;
 import com.fastcampus.toyproject.domain.trip.repository.TripRepository;
 import com.fastcampus.toyproject.domain.trip.service.TripService;
 import com.fastcampus.toyproject.domain.user.entity.User;
+import com.fastcampus.toyproject.domain.user.exception.UserException;
 import com.fastcampus.toyproject.domain.user.repository.UserRepository;
 import com.fastcampus.toyproject.domain.user.service.UserService;
 import java.util.ArrayList;
@@ -61,7 +66,7 @@ public class LikeTripService {
     public List<TripResponse> getLikeTripByUserId(Long userId) {
         return likeTripRepository
             .findAllByUserId(userId)
-            .orElse(Collections.emptyList())
+            .orElseThrow(()-> new UserException(NO_LIKE_TRIP))
             .stream().map(likeTrip -> likeTrip.getTrip())
             .map(TripResponse::fromEntity)
             .collect(Collectors.toList());
