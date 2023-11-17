@@ -28,17 +28,25 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ItineraryService {
 
     private final TripService tripService;
     private final ItineraryRepository itineraryRepository;
+    private static final ExecutorService executorService = Executors.newFixedThreadPool(10);
+    // 최대 10개의 스레드를 사용하는 ExecutorService 생성 (조정 가능)
 
     /**
      * trip 객체를 이용하여 연관된 itinerary 리스트 반환하는 메소드
@@ -91,16 +99,32 @@ public class ItineraryService {
         3. 현 request 에서 entity로 변환하여 리스트에 추가.
         4. response 리스트 정렬. (오더 순서대로)
          */
+        long startTime = System.currentTimeMillis();
         List<ItineraryResponse> itineraryResponseList = new ArrayList<>();
         Trip trip = getTrip(tripId);
         isMatchUserAndTrip(userId, trip);
 
         validateItineraryRequestOrder(itineraryRequests, trip);
 
-        List<Itinerary> itineraryList = new ArrayList<>();
+//        List<Itinerary> itineraryList = new ArrayList<>();
+        ConcurrentLinkedQueue<Itinerary> itineraryList = new ConcurrentLinkedQueue<>();
+        List<CompletableFuture<Void>> apiCalls = new ArrayList<>();
+
         for (ItineraryRequest ir : itineraryRequests) {
-            itineraryList.add(ItineraryFactory.getItineraryEntity(trip, ir));
+
+//            log.info("kakao call.. ");
+            CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+                itineraryList.add(ItineraryFactory.getItineraryEntity(trip, ir));
+            }, executorService);
+            apiCalls.add(future);
+//            log.info("kakao call end..");
         }
+
+        // 모든 API 호출이 완료될 때까지 대기
+        CompletableFuture<Void> allOf = CompletableFuture.allOf(apiCalls.toArray(new CompletableFuture[0]));
+        allOf.join(); // 모든 API 호출이 완료될 때까지 대기
+        executorService.shutdown(); // ExecutorService 종료
+
 
         List<Itinerary> saveItineraryList = itineraryRepository.saveAll(itineraryList);
         if (saveItineraryList == null) {
@@ -113,6 +137,8 @@ public class ItineraryService {
             );
         }
         ItineraryOrderUtil.sortItineraryResponseListByOrder(itineraryResponseList);
+        long endTime = System.currentTimeMillis();
+        log.info("[ItinerarySerivice.insert] time: {} ", endTime-startTime);
         return itineraryResponseList;
     }
 
